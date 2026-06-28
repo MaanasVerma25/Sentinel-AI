@@ -9,6 +9,7 @@ import {
   Bell,
   Radar,
   ChevronLeft,
+  ArrowLeft,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { clusters } from "@/lib/mock-data";
@@ -103,7 +104,7 @@ function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCoun
   );
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border bg-background/80 px-6 backdrop-blur">
-      <Link to="/" className="flex items-center gap-2">
+      <Link to="/home" className="flex items-center gap-2">
         <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-[color-mix(in_oklab,var(--cyan)_18%,transparent)] text-[var(--cyan)]">
           <Radar className="h-4 w-4" />
           <span className="absolute inset-0 rounded-md ring-1 ring-[var(--cyan)]/40 animate-ping opacity-60" />
@@ -130,6 +131,13 @@ function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCoun
           {pillText}
         </span>
       </div>
+      <Link
+        to="/home"
+        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-secondary/40 px-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        <span className="hidden sm:inline">Back to Home</span>
+      </Link>
       <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-muted-foreground hover:text-foreground">
         <Bell className="h-4 w-4" />
         {activeCount > 0 && (
