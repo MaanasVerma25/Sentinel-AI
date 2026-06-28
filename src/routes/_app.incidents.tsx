@@ -20,7 +20,9 @@ function IncidentsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Incidents</h1>
-        <p className="mt-1 text-sm text-muted-foreground">All detected anomalies, grouped by severity.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          All detected anomalies, grouped by severity.
+        </p>
       </div>
       {groups.map((g) => {
         const items = clusters.filter((c) => c.severity === g.sev);

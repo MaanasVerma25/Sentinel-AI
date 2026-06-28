@@ -14,12 +14,19 @@ const categoryColor: Record<string, string> = {
 };
 
 function fmtTime(d: Date) {
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+  return d.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
 }
 
 export function LiveSignalFeed({ maxItems = 16 }: { maxItems?: number }) {
   const [items, setItems] = useState<Item[]>(() =>
-    seedFeed.slice(0, maxItems).map((_, i) => ({ ...generateFeedItem(i), timestamp: new Date(Date.now() - i * 7000) })),
+    seedFeed
+      .slice(0, maxItems)
+      .map((_, i) => ({ ...generateFeedItem(i), timestamp: new Date(Date.now() - i * 7000) })),
   );
   const idxRef = useRef(seedFeed.length);
 
@@ -36,14 +43,20 @@ export function LiveSignalFeed({ maxItems = 16 }: { maxItems?: number }) {
       {items.map((item, i) => (
         <li
           key={item.id}
-          className={cn("flex items-start gap-3 px-4 py-2.5 text-sm", i === 0 && "ticker-in bg-[color-mix(in_oklab,var(--cyan)_5%,transparent)]")}
+          className={cn(
+            "flex items-start gap-3 px-4 py-2.5 text-sm",
+            i === 0 && "ticker-in bg-[color-mix(in_oklab,var(--cyan)_5%,transparent)]",
+          )}
         >
           <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-secondary text-muted-foreground">
             <SourceIcon kind={item.source} />
           </span>
           <p className="flex-1 truncate text-foreground/90">{item.text}</p>
           <span
-            className={cn("hidden md:inline rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider", categoryColor[item.category])}
+            className={cn(
+              "hidden md:inline rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+              categoryColor[item.category],
+            )}
           >
             {item.category}
           </span>
@@ -56,7 +69,9 @@ export function LiveSignalFeed({ maxItems = 16 }: { maxItems?: number }) {
               item.sentiment === "pos" && "bg-[var(--safe)]",
             )}
           />
-          <span className="w-16 shrink-0 text-right font-mono text-[11px] text-muted-foreground">{fmtTime(item.timestamp)}</span>
+          <span className="w-16 shrink-0 text-right font-mono text-[11px] text-muted-foreground">
+            {fmtTime(item.timestamp)}
+          </span>
         </li>
       ))}
     </ul>

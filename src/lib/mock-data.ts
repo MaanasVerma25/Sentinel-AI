@@ -171,37 +171,192 @@ export const clusters: CrisisCluster[] = [
   },
 ];
 
-const sampleMessages: { source: SourceKind; text: string; category: Category; sentiment: "neg" | "neu" | "pos" }[] = [
-  { source: "chat", text: "Payment keeps failing at checkout, third try now 😡", category: "Payment", sentiment: "neg" },
-  { source: "social", text: "@brand your site is down again, can't even log in", category: "Outage", sentiment: "neg" },
-  { source: "review", text: "App crashes every time I try to upload a photo on my Pixel 8", category: "Bug", sentiment: "neg" },
-  { source: "email", text: "Subject: Unauthorized charge on my card $0.50 — please investigate", category: "Fraud", sentiment: "neg" },
-  { source: "social", text: "Onboarding for this app is way too long, gave up halfway", category: "PR", sentiment: "neg" },
-  { source: "chat", text: "Hi, can't complete payment with Visa, says 3DS failed", category: "Payment", sentiment: "neg" },
-  { source: "chat", text: "Webhook arriving 6 minutes late — is this expected?", category: "Outage", sentiment: "neu" },
-  { source: "social", text: "Love the new dashboard update, super clean", category: "PR", sentiment: "pos" },
-  { source: "review", text: "Five stars, customer support was incredibly fast", category: "PR", sentiment: "pos" },
-  { source: "email", text: "Subject: API 503 in us-west-2, our integration is down", category: "Outage", sentiment: "neg" },
-  { source: "chat", text: "Multiple small charges I didn't make appearing on statement", category: "Fraud", sentiment: "neg" },
-  { source: "social", text: "Anyone else seeing checkout errors? It's been an hour", category: "Payment", sentiment: "neg" },
-  { source: "review", text: "Crashes on Android 14, lost all my unsaved work", category: "Bug", sentiment: "neg" },
-  { source: "chat", text: "Quick question — does the API support batch updates?", category: "Bug", sentiment: "neu" },
-  { source: "social", text: "Service status page says all good but mine isn't loading", category: "Outage", sentiment: "neg" },
-  { source: "email", text: "Subject: Refund request — payment failed three times", category: "Payment", sentiment: "neg" },
-  { source: "chat", text: "Photo upload crashes the app on Samsung S24", category: "Bug", sentiment: "neg" },
-  { source: "social", text: "Reading @devexplorer's thread, valid points honestly", category: "PR", sentiment: "neg" },
-  { source: "review", text: "Suspicious login attempts on my account every day", category: "Fraud", sentiment: "neg" },
-  { source: "chat", text: "Dashboard loading really slowly today, anyone else?", category: "Outage", sentiment: "neu" },
-  { source: "email", text: "Subject: Cannot reset password, link keeps expiring", category: "Bug", sentiment: "neg" },
-  { source: "social", text: "Great support team, fixed my issue in 5 min", category: "PR", sentiment: "pos" },
-  { source: "chat", text: "Card declined but money was taken from my account", category: "Payment", sentiment: "neg" },
-  { source: "review", text: "App is buggy after the latest update, please fix", category: "Bug", sentiment: "neg" },
-  { source: "social", text: "Status page green but I'm getting 500 errors 🤔", category: "Outage", sentiment: "neg" },
-  { source: "email", text: "Subject: Two-factor codes never arrive via SMS", category: "Bug", sentiment: "neg" },
-  { source: "chat", text: "I keep getting logged out every few minutes", category: "Bug", sentiment: "neg" },
-  { source: "social", text: "@brand please respond to the outage on twitter", category: "PR", sentiment: "neg" },
-  { source: "review", text: "Decent app overall but checkout needs work", category: "Payment", sentiment: "neu" },
-  { source: "chat", text: "Got charged twice for the same order #4421", category: "Payment", sentiment: "neg" },
+const sampleMessages: {
+  source: SourceKind;
+  text: string;
+  category: Category;
+  sentiment: "neg" | "neu" | "pos";
+}[] = [
+  {
+    source: "chat",
+    text: "Payment keeps failing at checkout, third try now 😡",
+    category: "Payment",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "@brand your site is down again, can't even log in",
+    category: "Outage",
+    sentiment: "neg",
+  },
+  {
+    source: "review",
+    text: "App crashes every time I try to upload a photo on my Pixel 8",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "email",
+    text: "Subject: Unauthorized charge on my card $0.50 — please investigate",
+    category: "Fraud",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "Onboarding for this app is way too long, gave up halfway",
+    category: "PR",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "Hi, can't complete payment with Visa, says 3DS failed",
+    category: "Payment",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "Webhook arriving 6 minutes late — is this expected?",
+    category: "Outage",
+    sentiment: "neu",
+  },
+  {
+    source: "social",
+    text: "Love the new dashboard update, super clean",
+    category: "PR",
+    sentiment: "pos",
+  },
+  {
+    source: "review",
+    text: "Five stars, customer support was incredibly fast",
+    category: "PR",
+    sentiment: "pos",
+  },
+  {
+    source: "email",
+    text: "Subject: API 503 in us-west-2, our integration is down",
+    category: "Outage",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "Multiple small charges I didn't make appearing on statement",
+    category: "Fraud",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "Anyone else seeing checkout errors? It's been an hour",
+    category: "Payment",
+    sentiment: "neg",
+  },
+  {
+    source: "review",
+    text: "Crashes on Android 14, lost all my unsaved work",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "Quick question — does the API support batch updates?",
+    category: "Bug",
+    sentiment: "neu",
+  },
+  {
+    source: "social",
+    text: "Service status page says all good but mine isn't loading",
+    category: "Outage",
+    sentiment: "neg",
+  },
+  {
+    source: "email",
+    text: "Subject: Refund request — payment failed three times",
+    category: "Payment",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "Photo upload crashes the app on Samsung S24",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "Reading @devexplorer's thread, valid points honestly",
+    category: "PR",
+    sentiment: "neg",
+  },
+  {
+    source: "review",
+    text: "Suspicious login attempts on my account every day",
+    category: "Fraud",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "Dashboard loading really slowly today, anyone else?",
+    category: "Outage",
+    sentiment: "neu",
+  },
+  {
+    source: "email",
+    text: "Subject: Cannot reset password, link keeps expiring",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "Great support team, fixed my issue in 5 min",
+    category: "PR",
+    sentiment: "pos",
+  },
+  {
+    source: "chat",
+    text: "Card declined but money was taken from my account",
+    category: "Payment",
+    sentiment: "neg",
+  },
+  {
+    source: "review",
+    text: "App is buggy after the latest update, please fix",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "Status page green but I'm getting 500 errors 🤔",
+    category: "Outage",
+    sentiment: "neg",
+  },
+  {
+    source: "email",
+    text: "Subject: Two-factor codes never arrive via SMS",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "chat",
+    text: "I keep getting logged out every few minutes",
+    category: "Bug",
+    sentiment: "neg",
+  },
+  {
+    source: "social",
+    text: "@brand please respond to the outage on twitter",
+    category: "PR",
+    sentiment: "neg",
+  },
+  {
+    source: "review",
+    text: "Decent app overall but checkout needs work",
+    category: "Payment",
+    sentiment: "neu",
+  },
+  {
+    source: "chat",
+    text: "Got charged twice for the same order #4421",
+    category: "Payment",
+    sentiment: "neg",
+  },
 ];
 
 export const seedFeed = sampleMessages;
@@ -234,7 +389,13 @@ export const timelineData = (() => {
   return rows;
 })();
 
-export const sources: { id: SourceKind; label: string; volume: number; lastSync: string; enabled: boolean }[] = [
+export const sources: {
+  id: SourceKind;
+  label: string;
+  volume: number;
+  lastSync: string;
+  enabled: boolean;
+}[] = [
   { id: "chat", label: "Support Chat", volume: 12842, lastSync: "12 sec ago", enabled: true },
   { id: "social", label: "Social Media", volume: 48211, lastSync: "8 sec ago", enabled: true },
   { id: "review", label: "App & Web Reviews", volume: 1421, lastSync: "1 min ago", enabled: true },
