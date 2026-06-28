@@ -13,6 +13,7 @@ import {
   Loader2,
   Eye,
   EyeOff,
+  CheckCircle2,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -48,6 +49,7 @@ function SetupPage() {
   const [company, setCompany] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,9 +78,16 @@ function SetupPage() {
           "Account created! Check your email for a confirmation link.",
           { duration: 6000 }
         );
-      } else {
-        toast.success("Account created successfully! Redirecting...");
-        navigate({ to: "/sources" });
+      } else if (data.user) {
+        // Session exists — set up default alert preferences
+        await supabase.from("alert_preferences").upsert({
+          user_id: data.user.id,
+          threshold,
+          notify_slack: true,
+          notify_email: true,
+        });
+
+        setShowSuccess(true);
       }
     } catch (err) {
       toast.error("An unexpected error occurred. Please try again.");
@@ -464,6 +473,51 @@ function SetupPage() {
 
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccess && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div
+            className="relative mx-4 w-full max-w-md border border-[#343940] bg-[#131518] p-10 shadow-[0_8px_60px_rgba(41,141,255,0.15)]"
+            style={{ animation: "fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both" }}
+          >
+            {/* Corner accents */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#298DFF]" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#298DFF]" />
+
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center border border-[#2ED573]/40 bg-[#2ED573]/10">
+                <CheckCircle2 className="h-8 w-8 text-[#2ED573]" />
+              </div>
+
+              <h2 className="mb-3 text-2xl font-extrabold uppercase tracking-tight text-white">
+                Setup Complete
+              </h2>
+              <p className="mb-2 text-sm text-[#6C7584] leading-relaxed">
+                Your Sentinel AI account is ready.
+              </p>
+              <p className="mb-8 text-xs font-mono uppercase tracking-widest text-[#298DFF]">
+                We will contact you ASAP to get you onboarded.
+              </p>
+
+              <div className="flex flex-col gap-3 w-full">
+                <button
+                  onClick={() => navigate({ to: "/dashboard" })}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#298DFF] px-6 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                >
+                  Go to Dashboard <ArrowRight className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => navigate({ to: "/home" })}
+                  className="w-full inline-flex items-center justify-center gap-2 border border-[#343940] bg-transparent px-6 py-3 text-xs font-mono uppercase tracking-wider text-[#6C7584] transition-colors hover:text-white hover:border-[#6C7584]"
+                >
+                  Back to Home
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
