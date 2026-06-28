@@ -10,7 +10,12 @@ import {
   Plug,
   Sliders,
   Bell,
+  Loader2,
+  Eye,
+  EyeOff,
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/setup")({
   component: SetupPage,
@@ -36,9 +41,50 @@ function SetupPage() {
 
   const activeCount = Object.values(connectedSources).filter(Boolean).length;
 
-  const handleRegister = (e: React.FormEvent) => {
+  // Auth form state
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [company, setCompany] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate({ to: "/sources" });
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            company,
+          },
+        },
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (data.user && !data.session) {
+        // Email confirmation required
+        toast.success(
+          "Account created! Check your email for a confirmation link.",
+          { duration: 6000 }
+        );
+      } else {
+        toast.success("Account created successfully! Redirecting...");
+        navigate({ to: "/sources" });
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -345,6 +391,8 @@ function SetupPage() {
                   <input 
                     type="text" 
                     required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                     placeholder="Jane Doe"
                     className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
                   />
@@ -354,15 +402,40 @@ function SetupPage() {
                   <input 
                     type="email" 
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="jane@company.com"
                     className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
                   />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">Password</label>
+                  <div className="relative">
+                    <input 
+                      type={showPassword ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Min. 6 characters"
+                      className="w-full rounded-none border border-[#343940] bg-black px-4 py-3 pr-10 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6C7584] hover:text-white transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">Company</label>
                   <input 
                     type="text" 
                     required
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
                     placeholder="Acme Corp"
                     className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
                   />
@@ -371,9 +444,14 @@ function SetupPage() {
                 <div className="mt-4">
                   <button 
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-none bg-[#298DFF] px-6 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                    disabled={isSubmitting}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-none bg-[#298DFF] px-6 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Complete Setup <ArrowRight className="h-4 w-4" />
+                    {isSubmitting ? (
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Creating Account...</>
+                    ) : (
+                      <>Complete Setup <ArrowRight className="h-4 w-4" /></>
+                    )}
                   </button>
                 </div>
                 
