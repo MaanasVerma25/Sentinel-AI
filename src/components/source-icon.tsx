@@ -8,7 +8,13 @@ const map = {
   email: { Icon: Mail, label: "Email" },
 };
 
-export function SourceIcon({ kind, className = "h-3.5 w-3.5" }: { kind: SourceKind; className?: string }) {
+export function SourceIcon({
+  kind,
+  className = "h-3.5 w-3.5",
+}: {
+  kind: SourceKind;
+  className?: string;
+}) {
   const { Icon } = map[kind];
   return <Icon className={className} />;
 }

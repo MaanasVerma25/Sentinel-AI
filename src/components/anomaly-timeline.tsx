@@ -44,8 +44,30 @@ export function AnomalyTimeline() {
             }}
             labelStyle={{ color: "#9aa3b2" }}
           />
-          <ReferenceArea x1="18:00" x2="20:00" fill="#FF4757" fillOpacity={0.08} stroke="#FF4757" strokeOpacity={0.4} strokeDasharray="4 4" />
-          <ReferenceDot x="19:00" y={260} r={5} fill="#FF4757" stroke="#fff" strokeWidth={1.5} label={{ value: "⚑ Anomaly Detected", position: "top", fill: "#FF4757", fontSize: 11, fontWeight: 600 }} />
+          <ReferenceArea
+            x1="18:00"
+            x2="20:00"
+            fill="#FF4757"
+            fillOpacity={0.08}
+            stroke="#FF4757"
+            strokeOpacity={0.4}
+            strokeDasharray="4 4"
+          />
+          <ReferenceDot
+            x="19:00"
+            y={260}
+            r={5}
+            fill="#FF4757"
+            stroke="#fff"
+            strokeWidth={1.5}
+            label={{
+              value: "⚑ Anomaly Detected",
+              position: "top",
+              fill: "#FF4757",
+              fontSize: 11,
+              fontWeight: 600,
+            }}
+          />
           {series.map((s) => (
             <Area
               key={s.key}

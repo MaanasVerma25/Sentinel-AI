@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 
-export function CountUp({ value, duration = 1000, className }: { value: number; duration?: number; className?: string }) {
+export function CountUp({
+  value,
+  duration = 1000,
+  className,
+}: {
+  value: number;
+  duration?: number;
+  className?: string;
+}) {
   const [n, setN] = useState(0);
   useEffect(() => {
     const start = performance.now();
