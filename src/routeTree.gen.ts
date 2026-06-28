@@ -17,6 +17,7 @@ import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppLiveFeedRouteImport } from './routes/_app.live-feed'
 import { Route as AppIncidentsRouteImport } from './routes/_app.incidents'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
@@ -57,10 +58,16 @@ const AppIncidentsRoute = AppIncidentsRouteImport.update({
   path: '/incidents',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/home': typeof HomeRoute
+  '/dashboard': typeof AppDashboardRoute
   '/incidents': typeof AppIncidentsRoute
   '/live-feed': typeof AppLiveFeedRoute
   '/reports': typeof AppReportsRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/home': typeof HomeRoute
+  '/dashboard': typeof AppDashboardRoute
   '/incidents': typeof AppIncidentsRoute
   '/live-feed': typeof AppLiveFeedRoute
   '/reports': typeof AppReportsRoute
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/home': typeof HomeRoute
+  '/_app/dashboard': typeof AppDashboardRoute
   '/_app/incidents': typeof AppIncidentsRoute
   '/_app/live-feed': typeof AppLiveFeedRoute
   '/_app/reports': typeof AppReportsRoute
@@ -92,6 +101,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/home'
+    | '/dashboard'
     | '/incidents'
     | '/live-feed'
     | '/reports'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/home'
+    | '/dashboard'
     | '/incidents'
     | '/live-feed'
     | '/reports'
@@ -110,6 +121,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/home'
+    | '/_app/dashboard'
     | '/_app/incidents'
     | '/_app/live-feed'
     | '/_app/reports'
@@ -181,10 +193,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIncidentsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
   AppIncidentsRoute: typeof AppIncidentsRoute
   AppLiveFeedRoute: typeof AppLiveFeedRoute
   AppReportsRoute: typeof AppReportsRoute
@@ -194,6 +214,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
   AppIncidentsRoute: AppIncidentsRoute,
   AppLiveFeedRoute: AppLiveFeedRoute,
   AppReportsRoute: AppReportsRoute,

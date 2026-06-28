@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_app")({
 });
 
 const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/live-feed", label: "Live Feed", icon: Radio },
   { to: "/incidents", label: "Incidents", icon: AlertTriangle },
   { to: "/sources", label: "Sources", icon: Plug },

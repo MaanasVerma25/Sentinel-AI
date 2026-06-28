@@ -309,7 +309,7 @@ function HomePage() {
               <a href="#testimonials" className="transition-colors hover:text-white">Testimonials</a>
             </div>
             <Link
-              to="/"
+              to="/dashboard"
               className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-5 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
             >
               Open Dashboard <ArrowRight className="h-3.5 w-3.5" />
@@ -353,7 +353,7 @@ function HomePage() {
           {/* CTAs */}
           <div className="animate-fade-up-2 mt-10 flex flex-wrap items-center justify-center gap-4 px-6 w-full">
             <Link
-              to="/"
+              to="/dashboard"
               className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-8 py-3.5 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90 w-full sm:w-auto justify-center"
             >
               <Radar className="h-4 w-4" /> Open Command Center
@@ -564,7 +564,7 @@ function HomePage() {
                 Open the live dashboard now and see Sentinel AI in action — real incidents, real data, real time.
               </p>
               <Link
-                to="/"
+                to="/dashboard"
                 className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-8 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90 shadow-[0_4px_20px_rgba(41,141,255,0.2)]"
               >
                 <Radar className="h-4 w-4" />
