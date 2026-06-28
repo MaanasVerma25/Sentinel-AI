@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SetupRouteImport } from './routes/setup'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
@@ -19,6 +20,11 @@ import { Route as AppLiveFeedRouteImport } from './routes/_app.live-feed'
 import { Route as AppIncidentsRouteImport } from './routes/_app.incidents'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -67,6 +73,7 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/home': typeof HomeRoute
+  '/setup': typeof SetupRoute
   '/dashboard': typeof AppDashboardRoute
   '/incidents': typeof AppIncidentsRoute
   '/live-feed': typeof AppLiveFeedRoute
@@ -76,6 +83,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/home': typeof HomeRoute
+  '/setup': typeof SetupRoute
   '/dashboard': typeof AppDashboardRoute
   '/incidents': typeof AppIncidentsRoute
   '/live-feed': typeof AppLiveFeedRoute
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/home': typeof HomeRoute
+  '/setup': typeof SetupRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/incidents': typeof AppIncidentsRoute
   '/_app/live-feed': typeof AppLiveFeedRoute
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/home'
+    | '/setup'
     | '/dashboard'
     | '/incidents'
     | '/live-feed'
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/home'
+    | '/setup'
     | '/dashboard'
     | '/incidents'
     | '/live-feed'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/home'
+    | '/setup'
     | '/_app/dashboard'
     | '/_app/incidents'
     | '/_app/live-feed'
@@ -133,10 +145,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   HomeRoute: typeof HomeRoute
+  SetupRoute: typeof SetupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -228,6 +248,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   HomeRoute: HomeRoute,
+  SetupRoute: SetupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
