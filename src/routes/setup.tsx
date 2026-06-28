@@ -50,6 +50,7 @@ function SetupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [emailConfirmRequired, setEmailConfirmRequired] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,20 +73,18 @@ function SetupPage() {
         return;
       }
 
-      if (data.user && !data.session) {
-        // Email confirmation required
-        toast.success(
-          "Account created! Check your email for a confirmation link.",
-          { duration: 6000 }
-        );
-      } else if (data.user) {
-        // Session exists — set up default alert preferences
-        await supabase.from("alert_preferences").upsert({
-          user_id: data.user.id,
-          threshold,
-          notify_slack: true,
-          notify_email: true,
-        });
+      if (data.user) {
+        if (!data.session) {
+          setEmailConfirmRequired(true);
+        } else {
+          // Session exists — set up default alert preferences
+          await supabase.from("alert_preferences").upsert({
+            user_id: data.user.id,
+            threshold,
+            notify_slack: true,
+            notify_email: true,
+          }).catch(() => {});
+        }
 
         setShowSuccess(true);
       }
@@ -496,9 +495,15 @@ function SetupPage() {
               <p className="mb-2 text-sm text-[#6C7584] leading-relaxed">
                 Your Sentinel AI account is ready.
               </p>
-              <p className="mb-8 text-xs font-mono uppercase tracking-widest text-[#298DFF]">
-                We will contact you ASAP to get you onboarded.
-              </p>
+              {emailConfirmRequired ? (
+                <p className="mb-8 text-xs font-mono uppercase tracking-widest text-[#FF6C3D]">
+                  Check your email to confirm your account first. We will contact you ASAP!
+                </p>
+              ) : (
+                <p className="mb-8 text-xs font-mono uppercase tracking-widest text-[#298DFF]">
+                  We will contact you ASAP to get you onboarded.
+                </p>
+              )}
 
               <div className="flex flex-col gap-3 w-full">
                 <button

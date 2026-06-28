@@ -28,6 +28,15 @@ begin
     new.raw_user_meta_data ->> 'company',
     new.email
   );
+  
+  insert into public.alert_preferences (user_id, threshold, notify_slack, notify_email)
+  values (
+    new.id,
+    65,
+    true,
+    true
+  ) on conflict (user_id) do nothing;
+  
   return new;
 end;
 $$;
