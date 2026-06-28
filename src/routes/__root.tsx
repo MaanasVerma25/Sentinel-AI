@@ -79,21 +79,44 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Sentinel AI — Crisis Detection Dashboard" },
-      { name: "description", content: "Real-time AI crisis detection across support chats, social media, reviews, and email." },
+      {
+        name: "description",
+        content:
+          "Real-time AI crisis detection across support chats, social media, reviews, and email.",
+      },
       { property: "og:title", content: "Sentinel AI — Crisis Detection Dashboard" },
-      { property: "og:description", content: "Real-time AI crisis detection across support chats, social media, reviews, and email." },
+      {
+        property: "og:description",
+        content:
+          "Real-time AI crisis detection across support chats, social media, reviews, and email.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Sentinel AI — Crisis Detection Dashboard" },
-      { name: "twitter:description", content: "Real-time AI crisis detection across support chats, social media, reviews, and email." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/75a8556b-0b50-4aee-b56f-d6c9afa6fde7" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/75a8556b-0b50-4aee-b56f-d6c9afa6fde7" },
+      {
+        name: "twitter:description",
+        content:
+          "Real-time AI crisis detection across support chats, social media, reviews, and email.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/75a8556b-0b50-4aee-b56f-d6c9afa6fde7",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/75a8556b-0b50-4aee-b56f-d6c9afa6fde7",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,

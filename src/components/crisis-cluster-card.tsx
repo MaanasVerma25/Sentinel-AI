@@ -17,19 +17,23 @@ export function CrisisClusterCard({
     <div
       className={cn(
         "group rounded-lg border bg-card p-4 transition-all",
-        isCrit ? "border-[var(--critical)]/50 pulse-critical" : "border-border hover:border-[var(--cyan)]/40",
+        isCrit
+          ? "border-[var(--critical)]/50 pulse-critical"
+          : "border-border hover:border-[var(--cyan)]/40",
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <SeverityBadge severity={cluster.severity} />
-            <span className="text-[11px] text-muted-foreground">· detected {cluster.detectedAt}</span>
+            <span className="text-[11px] text-muted-foreground">
+              · detected {cluster.detectedAt}
+            </span>
           </div>
           <h3 className="mt-2 truncate text-base font-semibold text-foreground">{cluster.title}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{cluster.mentions}</span> mentions in last 1h vs avg{" "}
-            {cluster.baseline}/h
+            <span className="font-medium text-foreground">{cluster.mentions}</span> mentions in last
+            1h vs avg {cluster.baseline}/h
             <span className="ml-2 inline-flex items-center gap-1 text-[var(--critical)]">
               <TrendingUp className="h-3 w-3" />+{cluster.increasePct}%
             </span>
@@ -37,7 +41,11 @@ export function CrisisClusterCard({
           <div className="mt-3 flex items-center justify-between gap-3">
             <SourceBadges sources={cluster.sources} />
             <div className="h-7 w-28">
-              <Sparkline data={cluster.spark} color={isCrit ? "#FF4757" : "#00D9FF"} className="h-full w-full" />
+              <Sparkline
+                data={cluster.spark}
+                color={isCrit ? "#FF4757" : "#00D9FF"}
+                className="h-full w-full"
+              />
             </div>
           </div>
         </div>

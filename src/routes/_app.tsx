@@ -75,7 +75,9 @@ function AppLayout() {
             onClick={() => setCollapsed((v) => !v)}
             className="absolute bottom-4 left-2 right-2 flex items-center justify-center gap-2 rounded-md border border-border bg-secondary/40 py-1.5 text-xs text-muted-foreground hover:text-foreground"
           >
-            <ChevronLeft className={cn("h-3.5 w-3.5 transition-transform", collapsed && "rotate-180")} />
+            <ChevronLeft
+              className={cn("h-3.5 w-3.5 transition-transform", collapsed && "rotate-180")}
+            />
             {!collapsed && <span>Collapse</span>}
           </button>
         </aside>
