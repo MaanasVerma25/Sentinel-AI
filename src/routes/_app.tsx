@@ -18,14 +18,14 @@ export const Route = createFileRoute("/_app")({
   component: AppLayout,
 });
 
-const nav = [
+const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/live-feed", label: "Live Feed", icon: Radio },
   { to: "/incidents", label: "Incidents", icon: AlertTriangle },
   { to: "/sources", label: "Sources", icon: Plug },
   { to: "/reports", label: "Reports", icon: FileText },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
-] as const;
+];
 
 function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
