@@ -2,6 +2,8 @@
 
 Sentinel AI is a real-time crisis detection and management platform designed for operations teams. It ingests signals from various sources (chat, social, reviews, email), uses AI to flag anomalies, clusters them into incidents, and provides actionable insights.
 
+## Live at: https://sentinel-ai-phi-five.vercel.app/home
+
 ## Features
 
 - **Real-Time Detection**: Flag anomalies within seconds across all integrated sources.
@@ -40,10 +42,6 @@ Sentinel AI is a real-time crisis detection and management platform designed for
    npm run dev
    ```
 
-## Lovable Integration
-
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting published git history (force pushing, rebasing, or amending/squashing commits) to prevent loss of project history.
 
 ## Development
 
@@ -54,4 +52,4 @@ Sentinel AI is a real-time crisis detection and management platform designed for
 
 ---
 
-Built with Sentinel AI. Stay ahead of every crisis.
+Sentinel AI. Stay ahead of every crisis.
