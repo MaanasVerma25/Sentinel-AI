@@ -334,13 +334,12 @@ function HomePage() {
           </div>
         </nav>
 
-        {/* ── Interactive 3D Banner ── */}
-        <section className="pt-24 px-6 mx-auto max-w-7xl w-full">
-          <SplineSceneBasic />
-        </section>
-
         {/* ── Hero ── */}
-        <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-28 pb-16 grid-bg hero-glow">
+        <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-24 pb-16 grid-bg hero-glow">
+          {/* ── Interactive 3D Banner ── */}
+          <div className="w-full max-w-7xl px-6 mb-8">
+            <SplineSceneBasic />
+          </div>
           {/* Tech dot element for engineering vibe */}
           <div className="absolute top-24 left-10 text-[9px] font-mono text-[#6C7584]/60 hidden lg:block">
             SYS.LOC: //US-WEST.SENTINEL
