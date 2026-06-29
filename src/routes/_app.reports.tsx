@@ -2,12 +2,37 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Download } from "lucide-react";
 
 const reports = [
-  { date: "Today", title: "Payment Failure Spike — Stripe 3DS", severity: "Critical", duration: "ongoing" },
+  {
+    date: "Today",
+    title: "Payment Failure Spike — Stripe 3DS",
+    severity: "Critical",
+    duration: "ongoing",
+  },
   { date: "Today", title: "API us-west-2 elevated 5xx", severity: "Critical", duration: "ongoing" },
-  { date: "Yesterday", title: "Checkout regression after build #4799", severity: "Critical", duration: "47 min" },
-  { date: "Yesterday", title: "Login throttling false-positive", severity: "Warning", duration: "1h 12m" },
-  { date: "3 days ago", title: "Reviews dip after iOS 18.2 update", severity: "Warning", duration: "2 days" },
-  { date: "Last week", title: "Coordinated fraud attempt — BIN 414720", severity: "Warning", duration: "3h 40m" },
+  {
+    date: "Yesterday",
+    title: "Checkout regression after build #4799",
+    severity: "Critical",
+    duration: "47 min",
+  },
+  {
+    date: "Yesterday",
+    title: "Login throttling false-positive",
+    severity: "Warning",
+    duration: "1h 12m",
+  },
+  {
+    date: "3 days ago",
+    title: "Reviews dip after iOS 18.2 update",
+    severity: "Warning",
+    duration: "2 days",
+  },
+  {
+    date: "Last week",
+    title: "Coordinated fraud attempt — BIN 414720",
+    severity: "Warning",
+    duration: "3h 40m",
+  },
 ];
 
 export const Route = createFileRoute("/_app/reports")({
@@ -15,7 +40,9 @@ export const Route = createFileRoute("/_app/reports")({
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
-        <p className="mt-1 text-sm text-muted-foreground">AI-generated post-mortems and incident summaries.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          AI-generated post-mortems and incident summaries.
+        </p>
       </div>
       <div className="overflow-hidden rounded-lg border border-border bg-card">
         <table className="w-full text-sm">

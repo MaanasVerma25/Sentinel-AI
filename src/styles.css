@@ -62,38 +62,38 @@
   --radius: 0px;
   /* Sui.io design tokens */
   --background: #000000;
-  --foreground: #FFFFFF;
+  --foreground: #ffffff;
   --surface: #131518;
   --surface-2: #1e2227;
   --card: #131518;
-  --card-foreground: #FFFFFF;
+  --card-foreground: #ffffff;
   --popover: #131518;
-  --popover-foreground: #FFFFFF;
-  --primary: #298DFF;
-  --primary-foreground: #FFFFFF;
-  --cyan: #298DFF;
+  --popover-foreground: #ffffff;
+  --primary: #298dff;
+  --primary-foreground: #ffffff;
+  --cyan: #298dff;
   --secondary: #131518;
-  --secondary-foreground: #FFFFFF;
+  --secondary-foreground: #ffffff;
   --muted: #1e2227;
-  --muted-foreground: #6C7584;
+  --muted-foreground: #6c7584;
   --accent: #1e2227;
-  --accent-foreground: #FFFFFF;
-  --destructive: #FF4757;
-  --destructive-foreground: #FFFFFF;
-  --critical: #FF4757;
-  --warning: #FF6C3D;
-  --safe: #2ED573;
+  --accent-foreground: #ffffff;
+  --destructive: #ff4757;
+  --destructive-foreground: #ffffff;
+  --critical: #ff4757;
+  --warning: #ff6c3d;
+  --safe: #2ed573;
   --border: #343940;
   --input: #1e2227;
-  --ring: #298DFF;
+  --ring: #298dff;
   --sidebar: #000000;
-  --sidebar-foreground: #6C7584;
-  --sidebar-primary: #298DFF;
-  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-foreground: #6c7584;
+  --sidebar-primary: #298dff;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #131518;
-  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #343940;
-  --sidebar-ring: #298DFF;
+  --sidebar-ring: #298dff;
 }
 
 @layer base {
@@ -113,23 +113,40 @@
 }
 
 @utility glow-critical {
-  box-shadow: 0 0 0 1px var(--critical), 0 0 24px -4px color-mix(in oklab, var(--critical) 60%, transparent);
+  box-shadow:
+    0 0 0 1px var(--critical),
+    0 0 24px -4px color-mix(in oklab, var(--critical) 60%, transparent);
 }
 @utility glow-cyan {
   box-shadow: 0 0 24px -6px color-mix(in oklab, var(--cyan) 70%, transparent);
 }
 
 @keyframes pulse-critical {
-  0%, 100% { box-shadow: 0 0 0 1px var(--critical), 0 0 0px 0px color-mix(in oklab, var(--critical) 60%, transparent); }
-  50% { box-shadow: 0 0 0 1px var(--critical), 0 0 26px 2px color-mix(in oklab, var(--critical) 55%, transparent); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px var(--critical),
+      0 0 0px 0px color-mix(in oklab, var(--critical) 60%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--critical),
+      0 0 26px 2px color-mix(in oklab, var(--critical) 55%, transparent);
+  }
 }
 @utility pulse-critical {
   animation: pulse-critical 2s ease-in-out infinite;
 }
 
 @keyframes ticker-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @utility ticker-in {
   animation: ticker-in 0.3s ease-out;

@@ -1,4 +1,12 @@
-export function Sparkline({ data, color = "var(--cyan)", className = "" }: { data: number[]; color?: string; className?: string }) {
+export function Sparkline({
+  data,
+  color = "var(--cyan)",
+  className = "",
+}: {
+  data: number[];
+  color?: string;
+  className?: string;
+}) {
   const w = 100;
   const h = 28;
   const max = Math.max(...data, 1);

@@ -14,7 +14,9 @@ function SourcesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Sources</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Manage the data streams Sentinel listens to.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Manage the data streams Sentinel listens to.
+        </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {state.map((s) => (
@@ -31,7 +33,12 @@ function SourcesPage() {
                     : "border-border bg-secondary/40 text-muted-foreground",
                 )}
               >
-                <span className={cn("h-1.5 w-1.5 rounded-full", s.enabled ? "bg-[var(--safe)]" : "bg-muted-foreground")} />
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    s.enabled ? "bg-[var(--safe)]" : "bg-muted-foreground",
+                  )}
+                />
                 {s.enabled ? "Connected" : "Paused"}
               </span>
             </div>
@@ -52,7 +59,9 @@ function SourcesPage() {
                 type="checkbox"
                 checked={s.enabled}
                 onChange={() =>
-                  setState((prev) => prev.map((p) => (p.id === s.id ? { ...p, enabled: !p.enabled } : p)))
+                  setState((prev) =>
+                    prev.map((p) => (p.id === s.id ? { ...p, enabled: !p.enabled } : p)),
+                  )
                 }
                 className="h-4 w-7 appearance-none rounded-full bg-muted relative cursor-pointer transition-colors checked:bg-[var(--cyan)] before:absolute before:top-0.5 before:left-0.5 before:h-3 before:w-3 before:rounded-full before:bg-white before:transition-transform checked:before:translate-x-3"
               />

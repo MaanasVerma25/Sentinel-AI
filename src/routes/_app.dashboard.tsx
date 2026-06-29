@@ -42,7 +42,9 @@ function StatCard({
     <div className="rounded-lg border border-border bg-card p-5">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {label}
+          </p>
           <div className="mt-2 flex items-baseline gap-2">
             <span
               className={cn(
@@ -115,10 +117,12 @@ function Dashboard() {
           </DialogHeader>
           <div className="space-y-4 py-2 text-center">
             <p className="text-sm leading-relaxed text-white">
-              This dashboard is running in simulation mode. All charts, status feeds, alerts, and anomaly logs are simulated to demonstrate the platform.
+              This dashboard is running in simulation mode. All charts, status feeds, alerts, and
+              anomaly logs are simulated to demonstrate the platform.
             </p>
             <p className="text-[10px] font-mono tracking-wide text-[#6C7584]">
-              * Notice: All metrics, incident lists, and timeline entries are generated from static, hardcoded data.
+              * Notice: All metrics, incident lists, and timeline entries are generated from static,
+              hardcoded data.
             </p>
           </div>
           <DialogFooter className="sm:justify-center">
@@ -134,7 +138,9 @@ function Dashboard() {
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Command Center</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Real-time anomaly detection across all signal sources.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Real-time anomaly detection across all signal sources.
+          </p>
         </div>
         <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
           <span className="inline-flex h-2 w-2 rounded-full bg-[var(--safe)] animate-pulse" />
@@ -150,7 +156,9 @@ function Dashboard() {
           icon={AlertTriangle}
           footer={
             activeIncidents > 0 ? (
-              <span className="text-[var(--critical)] font-medium">Immediate response required</span>
+              <span className="text-[var(--critical)] font-medium">
+                Immediate response required
+              </span>
             ) : (
               "No critical incidents"
             )
@@ -186,7 +194,9 @@ function Dashboard() {
           <div className="rounded-lg border border-border bg-card p-6">
             <div className="mb-4">
               <h2 className="text-lg font-bold tracking-tight">Severity Timeline</h2>
-              <p className="text-xs text-muted-foreground">Incident clusters and volumes detected over the last 24h.</p>
+              <p className="text-xs text-muted-foreground">
+                Incident clusters and volumes detected over the last 24h.
+              </p>
             </div>
             <AnomalyTimeline />
           </div>
@@ -194,7 +204,9 @@ function Dashboard() {
           <div className="space-y-4">
             <div>
               <h2 className="text-lg font-bold tracking-tight">Active Incident Groups</h2>
-              <p className="text-xs text-muted-foreground">AI-clustered anomalies that require triage.</p>
+              <p className="text-xs text-muted-foreground">
+                AI-clustered anomalies that require triage.
+              </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {clusters.map((c) => (
@@ -207,7 +219,9 @@ function Dashboard() {
         <div className="rounded-lg border border-border bg-card p-6">
           <div className="mb-4">
             <h2 className="text-lg font-bold tracking-tight">Live Signal Ingestion</h2>
-            <p className="text-xs text-muted-foreground">Streaming real-time feeds matching monitoring rules.</p>
+            <p className="text-xs text-muted-foreground">
+              Streaming real-time feeds matching monitoring rules.
+            </p>
           </div>
           <LiveSignalFeed />
         </div>
