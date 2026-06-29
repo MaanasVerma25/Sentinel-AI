@@ -18,6 +18,7 @@ import {
   Plug,
   Sliders,
 } from "lucide-react";
+import { SplineSceneBasic } from "@/components/ui/spline-scene-basic";
 
 export const Route = createFileRoute("/home")({
   component: HomePage,
@@ -326,6 +327,11 @@ function HomePage() {
             </div>
           </div>
         </nav>
+
+        {/* ── Interactive 3D Banner ── */}
+        <section className="pt-24 px-6 mx-auto max-w-7xl w-full">
+          <SplineSceneBasic />
+        </section>
 
         {/* ── Hero ── */}
         <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-28 pb-16 grid-bg hero-glow">
