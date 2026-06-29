@@ -9,17 +9,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [stage, setStage] = useState<"initial" | "zoom" | "complete">("initial");
 
   useEffect(() => {
-    // Stage 1: Initial display (3.5 seconds)
+    // Stage 1: Initial display (1.75 seconds)
     const timer1 = setTimeout(() => {
       setStage("zoom");
-    }, 3500);
+    }, 1750);
 
     // Stage 2: Animation completes (1 second after zoom starts)
     const timer2 = setTimeout(() => {
       setStage("complete");
       // Allow fade-out animation to finish before calling onComplete
       setTimeout(onComplete, 500);
-    }, 4500);
+    }, 2750);
 
     return () => {
       clearTimeout(timer1);
