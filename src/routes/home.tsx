@@ -44,7 +44,7 @@ function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
           }
         }, 16);
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -64,7 +64,7 @@ function TechnicalRadar() {
       {/* Grid crosshairs */}
       <div className="absolute h-full w-px bg-[#343940]/50" />
       <div className="absolute w-full h-px bg-[#343940]/50" />
-      
+
       {/* Concentric technical boxes (engineered vibe instead of round rings) */}
       {[1, 2, 3, 4].map((i) => (
         <div
@@ -76,15 +76,14 @@ function TechnicalRadar() {
           }}
         />
       ))}
-      
+
       {/* Rotating sweep */}
       <div
         className="absolute"
         style={{
           width: "88%",
           height: "88%",
-          background:
-            "conic-gradient(from 0deg, transparent 80%, rgba(41, 141, 255, 0.15) 100%)",
+          background: "conic-gradient(from 0deg, transparent 80%, rgba(41, 141, 255, 0.15) 100%)",
           animation: "spin 5s linear infinite",
         }}
       />
@@ -233,7 +232,6 @@ function HomePage() {
   }, []);
   void tick;
 
-
   const liveAlerts = [
     { id: 1, text: "CRITICAL SPIKE DETECTED · SUPPORT CHAT", color: "#FF4757" },
     { id: 2, text: "SENTIMENT ANOMALY DETECTED · TWITTER/X", color: "#FF6C3D" },
@@ -305,10 +303,18 @@ function HomePage() {
               </span>
             </Link>
             <div className="hidden items-center gap-8 text-xs font-mono uppercase tracking-wider text-[#6C7584] md:flex">
-              <a href="#features" className="transition-colors hover:text-white">Features</a>
-              <a href="#how-it-works" className="transition-colors hover:text-white">How it works</a>
-              <a href="#stats" className="transition-colors hover:text-white">Impact</a>
-              <a href="#testimonials" className="transition-colors hover:text-white">Testimonials</a>
+              <a href="#features" className="transition-colors hover:text-white">
+                Features
+              </a>
+              <a href="#how-it-works" className="transition-colors hover:text-white">
+                How it works
+              </a>
+              <a href="#stats" className="transition-colors hover:text-white">
+                Impact
+              </a>
+              <a href="#testimonials" className="transition-colors hover:text-white">
+                Testimonials
+              </a>
             </div>
             <div className="flex items-center gap-3">
               <Link
@@ -340,23 +346,34 @@ function HomePage() {
           {/* live alert ticker */}
           <div className="animate-fade-up mb-8 flex items-center gap-3 rounded-none border border-[#343940] bg-[#131518] px-4 py-2">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ backgroundColor: alert.color }} />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: alert.color }} />
+              <span
+                className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                style={{ backgroundColor: alert.color }}
+              />
+              <span
+                className="relative inline-flex h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: alert.color }}
+              />
             </span>
             <span key={alertIdx} className="animate-ticker text-[10px] font-mono tracking-wider">
-              <span className="font-bold mr-1.5" style={{ color: alert.color }}>SYSTEM_ALERT //</span> {alert.text}
+              <span className="font-bold mr-1.5" style={{ color: alert.color }}>
+                SYSTEM_ALERT //
+              </span>{" "}
+              {alert.text}
             </span>
           </div>
 
           {/* headline */}
           <div className="animate-fade-up-1 px-6 text-center max-w-5xl">
             <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-[1.1] tracking-tight text-white md:text-6xl uppercase">
-              Detect crises<br />
+              Detect crises
+              <br />
               <span className="text-[#298DFF]">before they ignite</span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[#6C7584] md:text-base">
-              Sentinel AI monitors your support channels, social media, reviews, and email in real time —
-              surfacing critical signals and clustering incidents so your team responds in minutes, not hours.
+              Sentinel AI monitors your support channels, social media, reviews, and email in real
+              time — surfacing critical signals and clustering incidents so your team responds in
+              minutes, not hours.
             </p>
           </div>
 
@@ -378,12 +395,14 @@ function HomePage() {
 
           {/* social proof row */}
           <div className="animate-fade-up-3 mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-mono uppercase tracking-wider text-[#6C7584]">
-            {["No credit card required", "SOC 2 Type II certified", "< 30 s detection latency"].map((t) => (
-              <span key={t} className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#298DFF]" />
-                {t}
-              </span>
-            ))}
+            {["No credit card required", "SOC 2 Type II certified", "< 30 s detection latency"].map(
+              (t) => (
+                <span key={t} className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#298DFF]" />
+                  {t}
+                </span>
+              ),
+            )}
           </div>
 
           {/* floating visual – radar + badges */}
@@ -396,7 +415,12 @@ function HomePage() {
               </div>
             </div>
             {/* floating badges */}
-            <FloatingBadge icon={Shield} label="Threat Neutralized" sub="2s ago // Severity: Critical" className="-top-2 -right-6" />
+            <FloatingBadge
+              icon={Shield}
+              label="Threat Neutralized"
+              sub="2s ago // Severity: Critical"
+              className="-top-2 -right-6"
+            />
             <FloatingBadge
               icon={Bell}
               label="3 Incidents Clustered"
@@ -434,7 +458,8 @@ function HomePage() {
                 Everything you need to stay ahead
               </h2>
               <p className="mt-4 text-xs leading-relaxed text-[#6C7584]">
-                From real-time ingestion to intelligent clustering, Sentinel AI gives your operations team superpowers.
+                From real-time ingestion to intelligent clustering, Sentinel AI gives your
+                operations team superpowers.
               </p>
             </div>
             <div className="grid gap-px bg-[#343940] sm:grid-cols-2 lg:grid-cols-3">
@@ -485,16 +510,41 @@ function HomePage() {
               <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
                 [ LOGICAL WORKFLOW ]
               </p>
-              <h2 className="text-3xl font-extrabold tracking-tight uppercase text-white md:text-4xl">From signal to resolution</h2>
+              <h2 className="text-3xl font-extrabold tracking-tight uppercase text-white md:text-4xl">
+                From signal to resolution
+              </h2>
             </div>
             <div className="relative grid gap-8 md:grid-cols-4">
               {[
-                { step: "01", title: "Ingest", desc: "Connect your chat, social, review, and email sources via our no-code integrations.", icon: Plug },
-                { step: "02", title: "Detect", desc: "Our ML models process every message, flagging sentiment drops, volume spikes, and keyword clusters.", icon: Eye },
-                { step: "03", title: "Cluster", desc: "Related signals are grouped into incidents with severity scores, root-cause hints, and timeline views.", icon: Shield },
-                { step: "04", title: "Respond", desc: "Your team gets alerted, investigates in the dashboard, and resolves before users feel the impact.", icon: CheckCircle2 },
+                {
+                  step: "01",
+                  title: "Ingest",
+                  desc: "Connect your chat, social, review, and email sources via our no-code integrations.",
+                  icon: Plug,
+                },
+                {
+                  step: "02",
+                  title: "Detect",
+                  desc: "Our ML models process every message, flagging sentiment drops, volume spikes, and keyword clusters.",
+                  icon: Eye,
+                },
+                {
+                  step: "03",
+                  title: "Cluster",
+                  desc: "Related signals are grouped into incidents with severity scores, root-cause hints, and timeline views.",
+                  icon: Shield,
+                },
+                {
+                  step: "04",
+                  title: "Respond",
+                  desc: "Your team gets alerted, investigates in the dashboard, and resolves before users feel the impact.",
+                  icon: CheckCircle2,
+                },
               ].map(({ step, title, desc, icon: Icon }) => (
-                <div key={step} className="relative flex flex-col items-start text-left border border-[#343940] bg-[#131518] p-6 group">
+                <div
+                  key={step}
+                  className="relative flex flex-col items-start text-left border border-[#343940] bg-[#131518] p-6 group"
+                >
                   <div className="absolute top-0 left-0 w-[2px] h-full bg-transparent group-hover:bg-[#298DFF] transition-all duration-300" />
                   <div className="relative mb-6 flex h-12 w-12 items-center justify-center rounded-none border border-[#343940] bg-[#131518] text-[#298DFF]">
                     <Icon className="h-5 w-5" />
@@ -502,7 +552,9 @@ function HomePage() {
                       {step}
                     </span>
                   </div>
-                  <h3 className="mb-2 text-sm font-bold uppercase tracking-wider text-white">{title}</h3>
+                  <h3 className="mb-2 text-sm font-bold uppercase tracking-wider text-white">
+                    {title}
+                  </h3>
                   <p className="text-xs leading-relaxed text-[#6C7584]">{desc}</p>
                 </div>
               ))}
@@ -514,7 +566,9 @@ function HomePage() {
         <section id="stats" className="py-24 border-b border-[#343940]">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
-              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">// SYSTEM PERFORMANCE METRICS</p>
+              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
+                // SYSTEM PERFORMANCE METRICS
+              </p>
               <h2 className="text-3xl font-extrabold uppercase text-white">Numbers that speak</h2>
             </div>
             <div className="grid gap-px bg-[#343940] sm:grid-cols-2 lg:grid-cols-4">
@@ -530,7 +584,9 @@ function HomePage() {
         <section id="testimonials" className="border-b border-[#343940] bg-[#131518]/10 py-24">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
-              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">// STAKEHOLDER FEEDBACK</p>
+              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
+                // STAKEHOLDER FEEDBACK
+              </p>
               <h2 className="text-3xl font-extrabold uppercase text-white">Trusted by ops teams</h2>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
@@ -563,7 +619,7 @@ function HomePage() {
               {/* Corner industrial notches */}
               <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#298DFF]" />
               <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#298DFF]" />
-              
+
               <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-none bg-[#298DFF]/10 border border-[#298DFF]/30">
                 <Radar className="h-6 w-6 text-[#298DFF]" />
               </div>
@@ -571,7 +627,8 @@ function HomePage() {
                 Ready to stay ahead of every crisis?
               </h2>
               <p className="mb-8 text-xs text-[#6C7584] max-w-lg mx-auto">
-                Open the live dashboard now and see Sentinel AI in action — real incidents, real data, real time.
+                Open the live dashboard now and see Sentinel AI in action — real incidents, real
+                data, real time.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
