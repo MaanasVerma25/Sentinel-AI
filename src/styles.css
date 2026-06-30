@@ -44,7 +44,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --animate-spotlight: spotlight 2s ease .75s 1 forwards;
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
 
   @keyframes spotlight {
     0% {
@@ -154,18 +154,35 @@
 
 /* Splash Screen Animations */
 @keyframes splash-logo-zoom {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(15); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(15);
+    opacity: 0;
+  }
 }
 
 @keyframes splash-particle-burst {
-  0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0); opacity: 0; }
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0);
+    opacity: 0;
+  }
 }
 
 @keyframes splash-fade-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 @utility animate-splash-logo-zoom {

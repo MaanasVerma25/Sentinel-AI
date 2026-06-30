@@ -210,7 +210,7 @@ function Dashboard() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {clusters.map((c) => (
-                <CrisisClusterCard key={c.id} cluster={c} onClick={() => handleView(c)} />
+                <CrisisClusterCard key={c.id} cluster={c} onView={() => handleView(c)} />
               ))}
             </div>
           </div>

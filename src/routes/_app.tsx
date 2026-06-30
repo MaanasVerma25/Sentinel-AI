@@ -10,10 +10,12 @@ import {
   Radar,
   ChevronLeft,
   ArrowLeft,
+  Menu,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { clusters } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -34,14 +36,13 @@ function AppLayout() {
   const activeIncidents = clusters.filter((c) => c.severity === "critical").length;
   const status = activeIncidents > 0 ? "critical" : "ok";
 
-  // shift body padding for sidebar
   return (
     <div className="min-h-screen bg-background text-foreground">
       <TopBar status={status} activeCount={activeIncidents} />
       <div className="flex">
         <aside
           className={cn(
-            "sticky top-14 h-[calc(100vh-3.5rem)] shrink-0 border-r border-border bg-sidebar transition-all duration-200",
+            "sticky top-14 hidden h-[calc(100vh-3.5rem)] shrink-0 border-r border-border bg-sidebar transition-all duration-200 md:block",
             collapsed ? "w-16" : "w-56",
           )}
         >
@@ -81,7 +82,7 @@ function AppLayout() {
             {!collapsed && <span>Collapse</span>}
           </button>
         </aside>
-        <main className="min-w-0 flex-1 px-6 py-6">
+        <main className="min-w-0 flex-1 px-4 py-6 md:px-6">
           <Outlet />
         </main>
       </div>
@@ -90,13 +91,16 @@ function AppLayout() {
 }
 
 function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCount: number }) {
-  // simulate a "live" pulse on the radar
   const [tick, setTick] = useState(0);
+  const [open, setOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   useEffect(() => {
     const i = setInterval(() => setTick((t) => t + 1), 2000);
     return () => clearInterval(i);
   }, []);
   void tick;
+
   const pillText = useMemo(
     () =>
       status === "ok"
@@ -104,21 +108,68 @@ function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCoun
         : `Monitoring 4 sources · ${activeCount} active incident${activeCount === 1 ? "" : "s"}`,
     [status, activeCount],
   );
+
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border bg-background/80 px-6 backdrop-blur">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border bg-background/80 px-4 backdrop-blur md:px-6">
+      <div className="flex items-center gap-2 md:hidden">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <button className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-muted-foreground hover:text-foreground">
+              <Menu className="h-5 w-5" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72 bg-sidebar p-0">
+            <SheetHeader className="border-b border-border p-6 text-left">
+              <SheetTitle className="flex items-center gap-2">
+                <Radar className="h-5 w-5 text-[var(--cyan)]" />
+                <span>Sentinel AI</span>
+              </SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-1 p-4">
+              {nav.map((item) => {
+                const isActive = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "group flex items-center gap-3 rounded-md px-3 py-3 text-base font-medium transition-colors",
+                      isActive
+                        ? "bg-[color-mix(in_oklab,var(--cyan)_14%,transparent)] text-[var(--cyan)]"
+                        : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
+                    )}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" />
+                    <span>{item.label}</span>
+                    {item.label === "Incidents" && activeCount > 0 && (
+                      <span className="ml-auto rounded-md bg-[var(--critical)] px-2 py-0.5 text-xs font-bold text-white">
+                        {activeCount}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+
       <Link to="/home" className="flex items-center gap-2">
         <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-[color-mix(in_oklab,var(--cyan)_18%,transparent)] text-[var(--cyan)]">
           <Radar className="h-4 w-4" />
           <span className="absolute inset-0 rounded-md ring-1 ring-[var(--cyan)]/40 animate-ping opacity-60" />
         </span>
-        <span className="font-bold tracking-tight text-foreground">
+        <span className="hidden font-bold tracking-tight text-foreground sm:inline-block">
           Sentinel <span className="text-[var(--cyan)]">AI</span>
         </span>
       </Link>
-      <div className="mx-auto">
+
+      <div className="mx-auto flex-1 md:flex-initial">
         <span
           className={cn(
-            "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium",
+            "inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[10px] font-medium sm:px-3 sm:text-xs",
             status === "ok"
               ? "border-[color-mix(in_oklab,var(--safe)_45%,transparent)] bg-[color-mix(in_oklab,var(--safe)_12%,transparent)] text-[var(--safe)]"
               : "border-[color-mix(in_oklab,var(--critical)_45%,transparent)] bg-[color-mix(in_oklab,var(--critical)_12%,transparent)] text-[var(--critical)]",
@@ -126,30 +177,33 @@ function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCoun
         >
           <span
             className={cn(
-              "h-2 w-2 rounded-full",
+              "h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2",
               status === "ok" ? "bg-[var(--safe)]" : "bg-[var(--critical)] animate-pulse",
             )}
           />
-          {pillText}
+          <span className="max-w-[120px] truncate sm:max-w-none">{pillText}</span>
         </span>
       </div>
-      <Link
-        to="/home"
-        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-secondary/40 px-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Back to Home</span>
-      </Link>
-      <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-muted-foreground hover:text-foreground">
-        <Bell className="h-4 w-4" />
-        {activeCount > 0 && (
-          <span className="absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--critical)] px-1 text-[10px] font-bold text-white">
-            {activeCount}
-          </span>
-        )}
-      </button>
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[var(--cyan)] to-blue-700 text-xs font-bold text-background">
-        AK
+
+      <div className="flex items-center gap-2 md:gap-4">
+        <Link
+          to="/home"
+          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-secondary/40 px-3 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Back to Home</span>
+        </Link>
+        <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-muted-foreground hover:text-foreground">
+          <Bell className="h-4 w-4" />
+          {activeCount > 0 && (
+            <span className="absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--critical)] px-1 text-[10px] font-bold text-white">
+              {activeCount}
+            </span>
+          )}
+        </button>
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[var(--cyan)] to-blue-700 text-[10px] font-bold text-background sm:h-9 sm:w-9 sm:text-xs">
+          AK
+        </div>
       </div>
     </header>
   );
