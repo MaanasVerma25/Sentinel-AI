@@ -53,14 +53,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
               <div
                 key={p.id}
                 className="absolute bg-[#298DFF] rounded-full shadow-[0_0_10px_#298DFF]"
-                style={{
-                  width: `${p.size}px`,
-                  height: `${p.size}px`,
-                  "--tw-translate-x": `${p.x}px`,
-                  "--tw-translate-y": `${p.y}px`,
-                  animation: `splash-particle-burst 0.8s cubic-bezier(0.12, 0, 0.39, 0) forwards`,
-                  animationDelay: `${p.delay}s`,
-                } as React.CSSProperties}
+                style={
+                  {
+                    width: `${p.size}px`,
+                    height: `${p.size}px`,
+                    "--tw-translate-x": `${p.x}px`,
+                    "--tw-translate-y": `${p.y}px`,
+                    animation: `splash-particle-burst 0.8s cubic-bezier(0.12, 0, 0.39, 0) forwards`,
+                    animationDelay: `${p.delay}s`,
+                  } as React.CSSProperties
+                }
               />
             ))}
 
@@ -94,10 +96,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       </div>
 
       {/* Decorative corner lines for tech feel */}
-      <div className={`absolute top-10 left-10 w-20 h-20 border-t border-l border-[#343940] transition-opacity duration-1000 ${stage === 'zoom' ? 'opacity-0' : 'opacity-100'}`} />
-      <div className={`absolute top-10 right-10 w-20 h-20 border-t border-r border-[#343940] transition-opacity duration-1000 ${stage === 'zoom' ? 'opacity-0' : 'opacity-100'}`} />
-      <div className={`absolute bottom-10 left-10 w-20 h-20 border-b border-l border-[#343940] transition-opacity duration-1000 ${stage === 'zoom' ? 'opacity-0' : 'opacity-100'}`} />
-      <div className={`absolute bottom-10 right-10 w-20 h-20 border-b border-r border-[#343940] transition-opacity duration-1000 ${stage === 'zoom' ? 'opacity-0' : 'opacity-100'}`} />
+      <div
+        className={`absolute top-10 left-10 w-20 h-20 border-t border-l border-[#343940] transition-opacity duration-1000 ${stage === "zoom" ? "opacity-0" : "opacity-100"}`}
+      />
+      <div
+        className={`absolute top-10 right-10 w-20 h-20 border-t border-r border-[#343940] transition-opacity duration-1000 ${stage === "zoom" ? "opacity-0" : "opacity-100"}`}
+      />
+      <div
+        className={`absolute bottom-10 left-10 w-20 h-20 border-b border-l border-[#343940] transition-opacity duration-1000 ${stage === "zoom" ? "opacity-0" : "opacity-100"}`}
+      />
+      <div
+        className={`absolute bottom-10 right-10 w-20 h-20 border-b border-r border-[#343940] transition-opacity duration-1000 ${stage === "zoom" ? "opacity-0" : "opacity-100"}`}
+      />
     </div>
   );
 };

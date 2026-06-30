@@ -78,15 +78,12 @@ function SetupPage() {
           setEmailConfirmRequired(true);
         } else {
           // Session exists — set up default alert preferences
-          await supabase
-            .from("alert_preferences")
-            .upsert({
-              user_id: data.user.id,
-              threshold,
-              notify_slack: true,
-              notify_email: true,
-            })
-            .catch(() => {});
+          await supabase.from("alert_preferences").upsert({
+            user_id: data.user.id,
+            threshold,
+            notify_slack: true,
+            notify_email: true,
+          });
         }
 
         setShowSuccess(true);

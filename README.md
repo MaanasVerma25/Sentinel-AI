@@ -42,7 +42,6 @@ Sentinel AI is a real-time crisis detection and management platform designed for
    npm run dev
    ```
 
-
 ## Development
 
 - `npm run dev`: Start the development server.
