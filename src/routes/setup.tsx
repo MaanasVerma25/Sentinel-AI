@@ -43,6 +43,7 @@ function SetupPage() {
   const activeCount = Object.values(connectedSources).filter(Boolean).length;
 
   // Auth form state
+  const [isSignIn, setIsSignIn] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,41 +53,58 @@ function SetupPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [emailConfirmRequired, setEmailConfirmRequired] = useState(false);
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            company,
-          },
-        },
-      });
+      if (isSignIn) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-
-      if (data.user) {
-        if (!data.session) {
-          setEmailConfirmRequired(true);
-        } else {
-          // Session exists — set up default alert preferences
-          await supabase.from("alert_preferences").upsert({
-            user_id: data.user.id,
-            threshold,
-            notify_slack: true,
-            notify_email: true,
-          });
+        if (error) {
+          toast.error(error.message);
+          return;
         }
 
-        setShowSuccess(true);
+        if (data.user) {
+          toast.success("Welcome back!");
+          navigate({ to: "/dashboard" });
+        }
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName,
+              company,
+            },
+          },
+        });
+
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+
+        if (data.user) {
+          if (!data.session) {
+            setEmailConfirmRequired(true);
+          } else {
+            // Session exists — set up default alert preferences
+            await supabase.from("alert_preferences").upsert({
+              user_id: data.user.id,
+              threshold,
+              notify_slack: true,
+              notify_email: true,
+            });
+          }
+
+          setShowSuccess(true);
+        }
       }
     } catch (err) {
       toast.error("An unexpected error occurred. Please try again.");
@@ -428,27 +446,51 @@ function SetupPage() {
                 <Radar className="h-5 w-5" />
               </div>
               <h2 className="mb-2 text-2xl font-bold uppercase tracking-wider text-white">
-                Create Account
+                Authentication
               </h2>
-              <p className="mb-8 text-xs leading-relaxed text-[#6C7584]">
-                Start monitoring your channels in minutes. Complete registration to access your
-                dashboard.
+              <p className="mb-6 text-xs leading-relaxed text-[#6C7584]">
+                {isSignIn
+                  ? "Access your dashboard to monitor system alerts and sentiment anomalies."
+                  : "Start monitoring your channels in minutes. Complete registration to access your dashboard."}
               </p>
 
-              <form onSubmit={handleRegister} className="flex flex-col gap-5">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Jane Doe"
-                    className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
-                  />
-                </div>
+              <div className="mb-6 flex w-full border border-[#343940] bg-black/60 p-1 font-mono text-[10px]">
+                <button
+                  type="button"
+                  onClick={() => setIsSignIn(false)}
+                  className={`flex-1 py-2 text-center transition-colors font-bold uppercase tracking-wider cursor-pointer ${
+                    !isSignIn ? "bg-[#298DFF] text-white" : "text-[#6C7584] hover:text-white"
+                  }`}
+                >
+                  Create Account
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsSignIn(true)}
+                  className={`flex-1 py-2 text-center transition-colors font-bold uppercase tracking-wider cursor-pointer ${
+                    isSignIn ? "bg-[#298DFF] text-white" : "text-[#6C7584] hover:text-white"
+                  }`}
+                >
+                  Sign In
+                </button>
+              </div>
+
+              <form onSubmit={handleAuth} className="flex flex-col gap-5">
+                {!isSignIn && (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      required={!isSignIn}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Jane Doe"
+                      className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
+                    />
+                  </div>
+                )}
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">
                     Work Email
@@ -485,19 +527,21 @@ function SetupPage() {
                     </button>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    placeholder="Acme Corp"
-                    className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
-                  />
-                </div>
+                {!isSignIn && (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      required={!isSignIn}
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      placeholder="Acme Corp"
+                      className="rounded-none border border-[#343940] bg-black px-4 py-3 text-sm text-white focus:border-[#298DFF] focus:outline-none transition-colors"
+                    />
+                  </div>
+                )}
 
                 <div className="mt-4">
                   <button
@@ -507,11 +551,11 @@ function SetupPage() {
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin" /> Creating Account...
+                        <Loader2 className="h-4 w-4 animate-spin" /> {isSignIn ? "Signing In..." : "Creating Account..."}
                       </>
                     ) : (
                       <>
-                        Complete Setup <ArrowRight className="h-4 w-4" />
+                        {isSignIn ? "Sign In" : "Complete Setup"} <ArrowRight className="h-4 w-4" />
                       </>
                     )}
                   </button>

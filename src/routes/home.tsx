@@ -195,11 +195,13 @@ function TestimonialCard({
   role,
   quote,
   initials,
+  tip,
 }: {
   name: string;
   role: string;
   quote: string;
   initials: string;
+  tip?: string;
 }) {
   return (
     <div className="rounded-none border border-[#343940] bg-[#131518] p-6 flex flex-col justify-between h-full relative">
@@ -209,7 +211,13 @@ function TestimonialCard({
             <Star key={i} className="h-3 w-3 fill-[#FF6C3D] text-[#FF6C3D]" />
           ))}
         </div>
-        <p className="mb-6 text-xs italic leading-relaxed text-[#6C7584]">"{quote}"</p>
+        <p className="mb-4 text-xs italic leading-relaxed text-[#A9B2C3]">"{quote}"</p>
+        {tip && (
+          <div className="mb-6 border-l-2 border-[#298DFF] bg-[#298DFF]/5 px-3 py-2 text-[10px] font-mono text-[#298DFF]">
+            <span className="font-bold uppercase tracking-wider block text-[9px] mb-1 text-[#298DFF]">PRO TIP:</span>
+            {tip}
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-3 border-t border-[#343940]/60 pt-4 mt-auto">
         <div className="flex h-8 w-8 items-center justify-center rounded-none bg-[#298DFF] text-xs font-bold text-white font-mono">
@@ -594,24 +602,34 @@ function HomePage() {
               </p>
               <h2 className="text-3xl font-extrabold uppercase text-white">Trusted by ops teams</h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <TestimonialCard
-                name="Priya Nair"
-                role="Head of CX · FinTech Scale-up"
-                quote="We caught a payment gateway meltdown 11 minutes before it hit our status page. Sentinel AI is now non-negotiable for our ops team."
-                initials="PN"
+                name="Maanas"
+                role="Lead DevOps Engineer"
+                quote="Configuring Sentinel AI to monitor our Kubernetes clusters was a breeze. We now get early warnings about resource anomalies before they impact our users."
+                initials="M"
+                tip="Enable the K8s integrations and use adaptive alerting thresholds to filter out transient spikes during peak hours."
               />
               <TestimonialCard
-                name="James Osei"
-                role="VP Engineering · SaaS Platform"
-                quote="The clustering is eerily accurate. What used to be 400 individual tickets now shows up as 1 incident with a root-cause summary."
-                initials="JO"
+                name="Ayaan"
+                role="VP of Product"
+                quote="Our customer success team is alert to issues even before clients report them. Sentiment clustering helps us coordinate hotfixes in real-time."
+                initials="A"
+                tip="Connect your customer support chat feeds and Twitter/X sentiment signals to detect customer-facing issues immediately."
               />
               <TestimonialCard
-                name="Sofia Martínez"
-                role="Customer Ops Lead · eCommerce"
-                quote="Our MTTR dropped by 68% in the first month. The live feed alone is worth the subscription — it's like having a dedicated crisis analyst 24/7."
-                initials="SM"
+                name="Arya"
+                role="Principal Security Analyst"
+                quote="The automated root-cause summaries are incredibly detailed. What used to take hours of log hunting now takes minutes."
+                initials="AR"
+                tip="Use the live feed with security filters on to spot suspicious request bursts and coordinate with your firewall configs."
+              />
+              <TestimonialCard
+                name="Bhavya"
+                role="Site Reliability Engineer"
+                quote="Our Mean Time to Resolution (MTTR) dropped by more than 70% in the first month. Sentinel AI has completely changed how we handle incident post-mortems."
+                initials="B"
+                tip="Integrate your PagerDuty and Slack workflows to automatically create post-mortem channels and share root-cause clusters."
               />
             </div>
           </div>
