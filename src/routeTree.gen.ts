@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
@@ -20,9 +22,19 @@ import { Route as AppLiveFeedRouteImport } from './routes/_app.live-feed'
 import { Route as AppIncidentsRouteImport } from './routes/_app.incidents'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SetupRoute = SetupRouteImport.update({
   id: '/setup',
   path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -73,7 +85,9 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/home': typeof HomeRoute
+  '/privacy': typeof PrivacyRoute
   '/setup': typeof SetupRoute
+  '/terms': typeof TermsRoute
   '/dashboard': typeof AppDashboardRoute
   '/incidents': typeof AppIncidentsRoute
   '/live-feed': typeof AppLiveFeedRoute
@@ -83,7 +97,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/home': typeof HomeRoute
+  '/privacy': typeof PrivacyRoute
   '/setup': typeof SetupRoute
+  '/terms': typeof TermsRoute
   '/dashboard': typeof AppDashboardRoute
   '/incidents': typeof AppIncidentsRoute
   '/live-feed': typeof AppLiveFeedRoute
@@ -96,7 +112,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/home': typeof HomeRoute
+  '/privacy': typeof PrivacyRoute
   '/setup': typeof SetupRoute
+  '/terms': typeof TermsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/incidents': typeof AppIncidentsRoute
   '/_app/live-feed': typeof AppLiveFeedRoute
@@ -110,7 +128,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/home'
+    | '/privacy'
     | '/setup'
+    | '/terms'
     | '/dashboard'
     | '/incidents'
     | '/live-feed'
@@ -120,7 +140,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/home'
+    | '/privacy'
     | '/setup'
+    | '/terms'
     | '/dashboard'
     | '/incidents'
     | '/live-feed'
@@ -132,7 +154,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/home'
+    | '/privacy'
     | '/setup'
+    | '/terms'
     | '/_app/dashboard'
     | '/_app/incidents'
     | '/_app/live-feed'
@@ -145,16 +169,32 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   HomeRoute: typeof HomeRoute
+  PrivacyRoute: typeof PrivacyRoute
   SetupRoute: typeof SetupRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/setup': {
       id: '/setup'
       path: '/setup'
       fullPath: '/setup'
       preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -248,7 +288,9 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   HomeRoute: HomeRoute,
+  PrivacyRoute: PrivacyRoute,
   SetupRoute: SetupRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

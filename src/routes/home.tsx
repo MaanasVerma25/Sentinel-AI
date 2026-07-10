@@ -682,6 +682,15 @@ function HomePage() {
               <span className="font-bold text-white">Sentinel AI</span>
               <span>· Real-time crisis detection</span>
             </div>
+            <div className="flex items-center gap-4">
+              <Link to="/privacy" className="hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+              <span className="text-[#343940]">|</span>
+              <Link to="/terms" className="hover:text-white transition-colors">
+                Terms of Service
+              </Link>
+            </div>
             <span>© {new Date().getFullYear()} Sentinel AI. All rights reserved.</span>
           </div>
         </footer>
