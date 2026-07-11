@@ -1,4 +1,4 @@
-import { Link, Outlet, useRouterState, createFileRoute } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState, useNavigate, createFileRoute } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Radio,
@@ -6,15 +6,18 @@ import {
   Plug,
   FileText,
   Settings as SettingsIcon,
-  Bell,
   Radar,
   ChevronLeft,
   ArrowLeft,
   Menu,
+  Loader2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { clusters } from "@/lib/mock-data";
+import { clusters, type CrisisCluster } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { NotificationsPanel } from "@/components/notifications-panel";
+import { IncidentDetailDialog } from "@/components/incident-detail";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_app")({
@@ -33,12 +36,52 @@ const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
 function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const activeIncidents = clusters.filter((c) => c.severity === "critical").length;
   const status = activeIncidents > 0 ? "critical" : "ok";
 
+  // Incident detail dialog state (opened from notifications)
+  const [selectedCluster, setSelectedCluster] = useState<CrisisCluster | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
+  const handleNotificationSelect = (cluster: CrisisCluster) => {
+    setSelectedCluster(cluster);
+    setDetailOpen(true);
+  };
+
+  // Auth guard: redirect to /setup if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate({ to: "/setup" });
+    }
+  }, [loading, user, navigate]);
+
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--cyan)]" />
+          <p className="text-sm text-muted-foreground font-mono uppercase tracking-wider">
+            Authenticating...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render the app until authenticated
+  if (!user) return null;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <TopBar status={status} activeCount={activeIncidents} />
+      <TopBar
+        status={status}
+        activeCount={activeIncidents}
+        user={user}
+        onSelectIncident={handleNotificationSelect}
+      />
       <div className="flex">
         <aside
           className={cn(
@@ -86,11 +129,33 @@ function AppLayout() {
           <Outlet />
         </main>
       </div>
+      <IncidentDetailDialog open={detailOpen} onOpenChange={setDetailOpen} cluster={selectedCluster} />
     </div>
   );
 }
 
-function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCount: number }) {
+function getInitials(user: { user_metadata?: { full_name?: string }; email?: string } | null): string {
+  if (!user) return "?";
+  const name = user.user_metadata?.full_name;
+  if (name) {
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+  return (user.email?.slice(0, 2) ?? "?").toUpperCase();
+}
+
+function TopBar({
+  status,
+  activeCount,
+  user,
+  onSelectIncident,
+}: {
+  status: "ok" | "critical";
+  activeCount: number;
+  user: { user_metadata?: { full_name?: string }; email?: string } | null;
+  onSelectIncident?: (cluster: CrisisCluster) => void;
+}) {
   const [tick, setTick] = useState(0);
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -193,16 +258,12 @@ function TopBar({ status, activeCount }: { status: "ok" | "critical"; activeCoun
           <ArrowLeft className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Back to Home</span>
         </Link>
-        <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-muted-foreground hover:text-foreground">
-          <Bell className="h-4 w-4" />
-          {activeCount > 0 && (
-            <span className="absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--critical)] px-1 text-[10px] font-bold text-white">
-              {activeCount}
-            </span>
-          )}
-        </button>
+        <NotificationsPanel
+          activeCount={activeCount}
+          onSelectIncident={onSelectIncident}
+        />
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[var(--cyan)] to-blue-700 text-[10px] font-bold text-background sm:h-9 sm:w-9 sm:text-xs">
-          AK
+          {getInitials(user)}
         </div>
       </div>
     </header>
