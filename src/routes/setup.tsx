@@ -748,10 +748,10 @@ function SetupPage() {
 
               <div className="flex flex-col gap-3 w-full">
                 <button
-                  onClick={() => navigate({ to: "/dashboard" })}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#298DFF] px-6 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                  onClick={() => navigate({ to: "/onboarding" })}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#298DFF] px-6 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90 cursor-pointer"
                 >
-                  Go to Dashboard <ArrowRight className="h-4 w-4" />
+                  Continue to Onboarding <ArrowRight className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => navigate({ to: "/home" })}
