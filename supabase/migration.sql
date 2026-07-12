@@ -135,3 +135,53 @@ create trigger profiles_updated_at
 create trigger alert_prefs_updated_at
   before update on public.alert_preferences
   for each row execute function public.update_updated_at();
+
+-- ============================================================
+-- 6. Onboarding Profiles table
+--    Stores company details & social handles entered during onboarding
+--    Run this in: Supabase Dashboard → SQL Editor → New Query
+-- ============================================================
+
+create table if not exists public.onboarding_profiles (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null unique,
+
+  -- Company details
+  company_name text,
+  website text,
+  industry text,
+  company_size text check (company_size in ('1-10', '11-50', '51-200', '201+')),
+  description text,
+
+  -- Social media handles
+  twitter_handle text,
+  linkedin_url text,
+  facebook_url text,
+  instagram_handle text,
+
+  -- Timestamps
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- Enable RLS
+alter table public.onboarding_profiles enable row level security;
+
+-- RLS Policies: users can only access their own onboarding profile
+create policy "Users can view own onboarding profile"
+  on public.onboarding_profiles for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert own onboarding profile"
+  on public.onboarding_profiles for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update own onboarding profile"
+  on public.onboarding_profiles for update
+  using (auth.uid() = user_id);
+
+-- Auto-update trigger for updated_at
+create trigger onboarding_profiles_updated_at
+  before update on public.onboarding_profiles
+  for each row execute function public.update_updated_at();
+

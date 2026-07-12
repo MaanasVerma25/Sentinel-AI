@@ -86,7 +86,27 @@ function OnboardingPage() {
         console.error("Failed to sync profile company name:", profileError);
       }
 
-      // 3. Cache onboarding status locally
+      // 3. Upsert full onboarding data to onboarding_profiles table (visible in Table Editor)
+      const { error: onboardingError } = await supabase
+        .from("onboarding_profiles")
+        .upsert({
+          user_id: user.id,
+          company_name: companyName,
+          website,
+          industry,
+          company_size: companySize,
+          description,
+          twitter_handle: twitter,
+          linkedin_url: linkedin,
+          facebook_url: facebook,
+          instagram_handle: instagram,
+        });
+
+      if (onboardingError) {
+        console.error("Failed to save onboarding profile:", onboardingError);
+      }
+
+      // 4. Cache onboarding status locally
       if (typeof window !== "undefined") {
         localStorage.setItem(`sentinel_onboarding_${user.id}`, "completed");
       }
