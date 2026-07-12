@@ -21,6 +21,7 @@ import {
   LogOut,
   Settings as SettingsIcon,
   LayoutDashboard,
+  Building2,
 } from "lucide-react";
 import { SplineSceneBasic } from "@/components/ui/spline-scene-basic";
 import { useAuth } from "@/hooks/useAuth";
@@ -425,6 +426,13 @@ function HomePage() {
                             className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
                           >
                             <SettingsIcon className="h-3.5 w-3.5" /> SETTINGS
+                          </Link>
+                          <Link
+                            to="/onboarding"
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                          >
+                            <Building2 className="h-3.5 w-3.5" /> COMPANY DETAILS
                           </Link>
                           <Link
                             to="/setup"

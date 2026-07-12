@@ -39,13 +39,41 @@ function OnboardingPage() {
   const [facebook, setFacebook] = useState("");
   const [instagram, setInstagram] = useState("");
 
-  // Redirect if not authenticated
+  // Redirect if not authenticated and load existing data
   useEffect(() => {
     if (!authLoading && !user) {
       toast.error("Authentication required to access onboarding.");
       navigate({ to: "/setup" });
     } else if (user) {
       setCompanyName(user.user_metadata?.company || "");
+      
+      const loadOnboardingProfile = async () => {
+        try {
+          const { data, error } = await supabase
+            .from("onboarding_profiles")
+            .select("*")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          if (error) {
+            console.error("Error loading onboarding profile:", error);
+          } else if (data) {
+            setCompanyName(data.company_name || user.user_metadata?.company || "");
+            setWebsite(data.website || "");
+            setIndustry(data.industry || "");
+            setCompanySize(data.company_size || "11-50");
+            setDescription(data.description || "");
+            setTwitter(data.twitter_handle || "");
+            setLinkedin(data.linkedin_url || "");
+            setFacebook(data.facebook_url || "");
+            setInstagram(data.instagram_handle || "");
+          }
+        } catch (err) {
+          console.error("Unexpected error loading onboarding data:", err);
+        }
+      };
+
+      loadOnboardingProfile();
     }
   }, [user, authLoading, navigate]);
 
