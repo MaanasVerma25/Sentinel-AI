@@ -17,8 +17,14 @@ import {
   Cpu,
   Plug,
   Sliders,
+  User,
+  LogOut,
+  Settings as SettingsIcon,
+  LayoutDashboard,
 } from "lucide-react";
 import { SplineSceneBasic } from "@/components/ui/spline-scene-basic";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/home")({
   component: HomePage,
@@ -234,6 +240,31 @@ function TestimonialCard({
 
 // ─── main page ───────────────────────────────────────────────────────────────
 function HomePage() {
+  const { user, signOut, loading: authLoading } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const getInitials = (user: any) => {
+    if (!user) return "?";
+    const name = user.user_metadata?.full_name;
+    if (name) {
+      const parts = name.trim().split(/\s+/);
+      if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    return (user.email?.slice(0, 2) ?? "?").toUpperCase();
+  };
+
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((t) => t + 1), 2500);
@@ -326,18 +357,114 @@ function HomePage() {
               </a>
             </div>
             <div className="flex items-center gap-3">
-              <Link
-                to="/setup"
-                className="inline-flex items-center gap-1.5 rounded-none border border-[#343940]/60 bg-[#131518] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-[#6C7584] hover:text-white transition-colors"
-              >
-                Set Up Now
-              </Link>
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
-              >
-                Dashboard <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              {authLoading ? (
+                <>
+                  <Link
+                    to="/setup"
+                    className="inline-flex items-center gap-1.5 rounded-none border border-[#343940]/60 bg-[#131518] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-[#6C7584] hover:text-white transition-colors"
+                  >
+                    Set Up Now
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                  >
+                    Dashboard <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </>
+              ) : user ? (
+                <div className="flex items-center gap-8">
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                  >
+                    Dashboard <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  
+                  {/* Account Dropdown */}
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#298DFF] to-blue-700 text-xs font-bold text-black border border-transparent hover:border-[#298DFF]/60 cursor-pointer shadow-[0_0_12px_rgba(41,141,255,0.2)] focus:outline-none transition-colors"
+                    >
+                      {getInitials(user)}
+                    </button>
+                    
+                    {dropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-64 rounded-none border border-[#343940] bg-[#131518] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.8)] backdrop-blur-md z-[100] animate-fade-up">
+                        {/* Header details */}
+                        <div className="mb-3 border-b border-[#343940]/60 pb-3">
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-[#298DFF] mb-0.5">
+                            [ Active Session ]
+                          </p>
+                          <p className="text-xs font-bold text-white truncate max-w-full">
+                            {user.user_metadata?.full_name || "Sentinel Operator"}
+                          </p>
+                          <p className="text-[9px] font-mono text-[#6C7584] truncate max-w-full">
+                            {user.email}
+                          </p>
+                          {user.user_metadata?.company && (
+                            <p className="text-[9px] font-mono text-[#6C7584] truncate max-w-full mt-0.5">
+                              Org: {user.user_metadata.company}
+                            </p>
+                          )}
+                        </div>
+                        
+                        {/* Links/Actions */}
+                        <div className="flex flex-col gap-1">
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                          >
+                            <LayoutDashboard className="h-3.5 w-3.5" /> DASHBOARD
+                          </Link>
+                          <Link
+                            to="/settings"
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                          >
+                            <SettingsIcon className="h-3.5 w-3.5" /> SETTINGS
+                          </Link>
+                          <Link
+                            to="/setup"
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                          >
+                            <User className="h-3.5 w-3.5" /> SETUP FLOW
+                          </Link>
+                          <div className="my-1 border-t border-[#343940]/40" />
+                          <button
+                            onClick={async () => {
+                              setDropdownOpen(false);
+                              await signOut();
+                              toast.success("Signed out successfully.");
+                            }}
+                            className="flex w-full items-center gap-2 rounded-none px-2 py-1.5 text-left text-xs text-[#FF4757] hover:text-white hover:bg-[#FF4757]/10 font-mono transition-colors cursor-pointer"
+                          >
+                            <LogOut className="h-3.5 w-3.5" /> SIGN OUT
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    to="/setup"
+                    className="inline-flex items-center gap-1.5 rounded-none border border-[#343940]/60 bg-[#131518] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-[#6C7584] hover:text-white transition-colors"
+                  >
+                    Set Up Now
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                  >
+                    Dashboard <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </nav>
