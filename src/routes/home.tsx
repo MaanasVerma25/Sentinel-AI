@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Footer } from "@/components/footer";
 import { useEffect, useRef, useState } from "react";
 import {
   Radar,
@@ -809,26 +810,7 @@ function HomePage() {
           </div>
         </section>
 
-        {/* ── Footer ── */}
-        <footer className="border-t border-[#343940] py-10 bg-black">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 text-[10px] font-mono uppercase tracking-wider text-[#6C7584] md:flex-row">
-            <div className="flex items-center gap-2.5">
-              <Radar className="h-4 w-4 text-[#298DFF]" />
-              <span className="font-bold text-white">Sentinel AI</span>
-              <span>· Real-time crisis detection</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link to="/privacy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <span className="text-[#343940]">|</span>
-              <Link to="/terms" className="hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-            </div>
-            <span>© {new Date().getFullYear()} Sentinel AI. All rights reserved.</span>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   );

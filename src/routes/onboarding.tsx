@@ -16,6 +16,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { ingestForCompanyFn } from "@/lib/ingest/server-fn";
 
 export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
@@ -134,7 +135,45 @@ function OnboardingPage() {
         console.error("Failed to save onboarding profile:", onboardingError);
       }
 
-      // 4. Cache onboarding status locally
+      // 4. Ensure the company is registered in the companies table
+      let companyId: string | null = null;
+      try {
+        const { data: existingComp } = await supabase
+          .from("companies")
+          .select("id")
+          .eq("name", companyName)
+          .maybeSingle();
+
+        if (existingComp) {
+          companyId = existingComp.id;
+        } else {
+          const { data: newComp, error: newCompError } = await supabase
+            .from("companies")
+            .insert({
+              name: companyName,
+              aliases: [companyName],
+            })
+            .select()
+            .single();
+
+          if (newCompError) {
+            console.error("Failed to create company in companies table:", newCompError);
+          } else if (newComp) {
+            companyId = newComp.id;
+          }
+        }
+      } catch (dbErr) {
+        console.error("Database error while registering company:", dbErr);
+      }
+
+      // 5. Proactively trigger the first crawl scan in the background
+      if (companyId) {
+        ingestForCompanyFn({ data: { companyId } }).catch((err) => {
+          console.error("Initial background ingest failed:", err);
+        });
+      }
+
+      // 6. Cache onboarding status locally
       if (typeof window !== "undefined") {
         localStorage.setItem(`sentinel_onboarding_${user.id}`, "completed");
       }
