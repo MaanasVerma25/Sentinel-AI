@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Bell, AlertTriangle, Eye, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { clusters, type CrisisCluster, type Severity } from "@/lib/mock-data";
@@ -51,13 +51,33 @@ const severityBg: Record<Severity, string> = {
 export function NotificationsPanel({
   activeCount,
   onSelectIncident,
+  customClusters,
 }: {
   activeCount: number;
   onSelectIncident?: (cluster: CrisisCluster) => void;
+  customClusters?: CrisisCluster[];
 }) {
-  const [notifications, setNotifications] = useState(generateNotifications);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [open, setOpen] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  useEffect(() => {
+    const list = customClusters || clusters;
+    setNotifications(
+      list.map((c) => ({
+        id: `notif-${c.id}`,
+        cluster: c,
+        message:
+          c.severity === "critical"
+            ? `Critical: ${c.title} — ${c.mentions} mentions (+${c.increasePct}%)`
+            : c.severity === "warning"
+              ? `Warning: ${c.title} — ${c.mentions} mentions (+${c.increasePct}%)`
+              : `Watching: ${c.title} — ${c.mentions} mentions`,
+        timestamp: c.detectedAt,
+        read: c.severity === "watching",
+      }))
+    );
+  }, [customClusters]);
 
   const handleMarkAllRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));

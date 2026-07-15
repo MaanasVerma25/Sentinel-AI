@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { clusters, type CrisisCluster, type Severity, type Category } from "@/lib/mock-data";
 import { CrisisClusterCard } from "@/components/crisis-cluster-card";
 import { IncidentDetailDialog } from "@/components/incident-detail";
-import { Search, X, ArrowUpDown } from "lucide-react";
+import { Search, X, ArrowUpDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
+import { generateRealClusters } from "@/lib/clustering";
+import { useSearch } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app/incidents")({
   component: IncidentsPage,
@@ -32,6 +36,97 @@ const sortOptions: { value: SortKey; label: string }[] = [
 ];
 
 function IncidentsPage() {
+  const { user, loading: authLoading } = useAuth();
+  const { demo: isDemo } = useSearch({ from: "/_app" });
+  
+  // Real database states
+  const [isOnboarded, setIsOnboarded] = useState(false);
+  const [company, setCompany] = useState<any>(null);
+  const [mentions, setMentions] = useState<any[]>([]);
+  const [loadingDb, setLoadingDb] = useState(true);
+
+  // Load onboarding profile, company, and initial mentions
+  useEffect(() => {
+    if (authLoading || !user || isDemo) {
+      setLoadingDb(false);
+      return;
+    }
+    let isMounted = true;
+    async function loadIncidentsData() {
+      try {
+        setLoadingDb(true);
+        const { data: profile } = await supabase
+          .from("onboarding_profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (profile && isMounted) {
+          setIsOnboarded(true);
+          const { data: companyData } = await supabase
+            .from("companies")
+            .select("*")
+            .eq("name", profile.company_name)
+            .maybeSingle();
+
+          if (companyData && isMounted) {
+            setCompany(companyData);
+            const { data: mentionsData } = await supabase
+              .from("mentions")
+              .select("*")
+              .eq("company_id", companyData.id)
+              .order("created_at", { ascending: false });
+
+            if (mentionsData && isMounted) {
+              setMentions(mentionsData);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error loading incidents:", err);
+      } finally {
+        if (isMounted) setLoadingDb(false);
+      }
+    }
+    loadIncidentsData();
+    return () => {
+      isMounted = false;
+    };
+  }, [user, authLoading, isDemo]);
+
+  // Realtime subscription for live mentions
+  useEffect(() => {
+    if (!company) return;
+
+    const channel = supabase
+      .channel("realtime-mentions-incidents")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "mentions",
+          filter: `company_id=eq.${company.id}`,
+        },
+        (payload) => {
+          setMentions((prev) => [payload.new, ...prev]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [company]);
+
+  // Get source dataset based on auth / demo state
+  const dataset = useMemo(() => {
+    if (!isDemo && isOnboarded && company) {
+      return generateRealClusters(mentions, company.name);
+    }
+    return clusters;
+  }, [isDemo, isOnboarded, company, mentions]);
+
   const [selected, setSelected] = useState<CrisisCluster | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -69,7 +164,7 @@ function IncidentsPage() {
 
   // Filtered & sorted clusters
   const filteredClusters = useMemo(() => {
-    let result = [...clusters];
+    let result = [...dataset];
 
     // Search filter
     if (searchQuery.trim()) {
@@ -113,6 +208,19 @@ function IncidentsPage() {
     { sev: "warning" as const, label: "Warning" },
     { sev: "watching" as const, label: "Watching" },
   ];
+
+  if (!isDemo && isOnboarded && (loadingDb || authLoading)) {
+    return (
+      <div className="flex h-[80vh] items-center justify-center bg-black">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-[#298DFF]" />
+          <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            Synchronizing crisis incidents...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -22,6 +22,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { NotificationsPanel } from "@/components/notifications-panel";
 import { IncidentDetailDialog } from "@/components/incident-detail";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { supabase } from "@/lib/supabase";
+import { generateRealClusters } from "@/lib/clustering";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -47,7 +49,92 @@ function AppLayout() {
   const { user, loading } = useAuth();
   const { demo: isDemo } = useSearch({ from: "/_app" });
   const [demoBannerDismissed, setDemoBannerDismissed] = useState(false);
-  const activeIncidents = clusters.filter((c) => c.severity === "critical").length;
+  // Dynamic database states
+  const [isOnboarded, setIsOnboarded] = useState(false);
+  const [company, setCompany] = useState<any>(null);
+  const [mentions, setMentions] = useState<any[]>([]);
+
+  // Load onboarding profile, company, and initial mentions
+  useEffect(() => {
+    if (loading || !user || isDemo) return;
+    let isMounted = true;
+
+    async function loadShellData() {
+      try {
+        const { data: profile } = await supabase
+          .from("onboarding_profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (profile && isMounted) {
+          setIsOnboarded(true);
+          const { data: companyData } = await supabase
+            .from("companies")
+            .select("*")
+            .eq("name", profile.company_name)
+            .maybeSingle();
+
+          if (companyData && isMounted) {
+            setCompany(companyData);
+            const { data: mentionsData } = await supabase
+              .from("mentions")
+              .select("*")
+              .eq("company_id", companyData.id)
+              .order("created_at", { ascending: false });
+
+            if (mentionsData && isMounted) {
+              setMentions(mentionsData);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error loading shell data:", err);
+      }
+    }
+    loadShellData();
+    return () => {
+      isMounted = false;
+    };
+  }, [user, loading, isDemo]);
+
+  // Realtime subscription for live mentions
+  useEffect(() => {
+    if (!company) return;
+
+    const channel = supabase
+      .channel("realtime-mentions-shell")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "mentions",
+          filter: `company_id=eq.${company.id}`,
+        },
+        (payload) => {
+          setMentions((prev) => [payload.new, ...prev]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [company]);
+
+  // Calculate dynamic clusters and metrics
+  const customClusters = useMemo(() => {
+    if (!isDemo && isOnboarded && company) {
+      return generateRealClusters(mentions, company.name);
+    }
+    return clusters;
+  }, [isDemo, isOnboarded, company, mentions]);
+
+  const activeIncidents = useMemo(() => {
+    return customClusters.filter((c) => c.severity === "critical").length;
+  }, [customClusters]);
+
   const status = activeIncidents > 0 ? "critical" : "ok";
 
   // Incident detail dialog state (opened from notifications)
@@ -118,6 +205,7 @@ function AppLayout() {
         activeCount={activeIncidents}
         user={user}
         onSelectIncident={handleNotificationSelect}
+        customClusters={customClusters}
       />
       <div className="flex">
         <aside
@@ -214,11 +302,13 @@ function TopBar({
   activeCount,
   user,
   onSelectIncident,
+  customClusters,
 }: {
   status: "ok" | "critical";
   activeCount: number;
   user: { user_metadata?: { full_name?: string }; email?: string } | null;
   onSelectIncident?: (cluster: CrisisCluster) => void;
+  customClusters?: CrisisCluster[];
 }) {
   const { theme, setTheme } = useTheme();
   const [tick, setTick] = useState(0);
@@ -352,7 +442,7 @@ function TopBar({
             <Moon className="h-4 w-4 text-[var(--cyan)]" />
           )}
         </button>
-        <NotificationsPanel activeCount={activeCount} onSelectIncident={onSelectIncident} />
+        <NotificationsPanel activeCount={activeCount} onSelectIncident={onSelectIncident} customClusters={customClusters} />
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[var(--cyan)] to-blue-700 text-[10px] font-bold text-background sm:h-9 sm:w-9 sm:text-xs">
           {getInitials(user)}
         </div>
