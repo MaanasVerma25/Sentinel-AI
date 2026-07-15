@@ -68,8 +68,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
           {/* Logo */}
           <div
-            className={`relative flex h-24 w-24 items-center justify-center rounded-none bg-[#298DFF]/10 border border-[#298DFF]/30 transition-all duration-300 ${
-              stage === "zoom" ? "animate-splash-logo-zoom" : "scale-100 opacity-100"
+            className={`relative flex h-24 w-24 items-center justify-center rounded-none bg-[#298DFF]/10 border border-[#298DFF]/30 ${
+              stage === "zoom" || stage === "complete" ? "animate-splash-logo-zoom" : "scale-100 opacity-100"
             }`}
           >
             <Radar className="h-12 w-12 text-[#298DFF]" />
