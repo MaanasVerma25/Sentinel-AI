@@ -23,9 +23,12 @@ import {
   Settings as SettingsIcon,
   LayoutDashboard,
   Building2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { SplineSceneBasic } from "@/components/ui/spline-scene-basic";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/home")({
@@ -245,6 +248,7 @@ function TestimonialCard({
 // ─── main page ───────────────────────────────────────────────────────────────
 function HomePage() {
   const { user, signOut, loading: authLoading } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -364,7 +368,22 @@ function HomePage() {
                 Testimonials
               </a>
             </div>
+
             <div className="flex items-center gap-3">
+              {/* Theme toggle – icon only */}
+              <button
+                type="button"
+                id="home-theme-toggle"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                className="hidden md:inline-flex h-8 w-8 items-center justify-center rounded-none border border-border bg-card text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4 text-[var(--warning)]" />
+                ) : (
+                  <Moon className="h-4 w-4 text-[var(--cyan)]" />
+                )}
+              </button>
               {authLoading ? (
                 <>
                   <Link
