@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { SplashScreen } from "@/components/splash-screen";
+import { ThemeProvider, useTheme } from "@/hooks/useTheme";
 
 function NotFoundComponent() {
   return (
@@ -128,9 +129,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const stored = localStorage.getItem('sentinel_theme');
+                const isDark = stored === 'dark' || (!stored && true);
+                if (isDark) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body>
         {children}
@@ -140,9 +156,10 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-function RootComponent() {
+function RootComponentContent() {
   const { queryClient } = Route.useRouteContext();
   const [showSplash, setShowSplash] = useState(true);
+  const { theme } = useTheme();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -150,7 +167,15 @@ function RootComponent() {
       <div className={showSplash ? "hidden" : "block"}>
         <Outlet />
       </div>
-      <Toaster />
+      <Toaster theme={theme} />
     </QueryClientProvider>
+  );
+}
+
+function RootComponent() {
+  return (
+    <ThemeProvider>
+      <RootComponentContent />
+    </ThemeProvider>
   );
 }

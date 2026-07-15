@@ -8,20 +8,20 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-black text-[#c4cad3] font-sans antialiased">
+    <div className="min-h-screen bg-background text-muted-foreground font-sans antialiased">
       {/* ── Nav ── */}
-      <nav className="sticky top-0 z-50 border-b border-[#343940] bg-black/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link
             to="/home"
-            className="flex items-center gap-2 text-sm text-[#6C7584] hover:text-white transition-colors"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>
           <div className="flex items-center gap-2">
-            <Radar className="h-4 w-4 text-[#298DFF]" />
-            <span className="text-sm font-bold text-white tracking-wide">Sentinel AI</span>
+            <Radar className="h-4 w-4 text-primary" />
+            <span className="text-sm font-bold text-foreground tracking-wide">Sentinel AI</span>
           </div>
         </div>
       </nav>
@@ -30,15 +30,20 @@ function PrivacyPage() {
       <main className="mx-auto max-w-3xl px-6 py-16 md:py-24">
         {/* Header */}
         <div className="mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#298DFF]/30 bg-[#298DFF]/10 px-3 py-1 text-xs font-mono uppercase tracking-wider text-[#298DFF] mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-mono uppercase tracking-wider text-primary mb-6">
             <Shield className="h-3 w-3" />
             Legal
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
             Privacy Policy
           </h1>
-          <p className="text-[#6C7584] text-sm font-mono">
-            Last updated: {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+          <p className="text-muted-foreground text-sm font-mono">
+            Last updated:{" "}
+            {new Date().toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
           </p>
         </div>
 
@@ -167,20 +172,20 @@ function Section({
   return (
     <section className="group">
       <div className="flex items-start gap-4 mb-4">
-        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#343940] bg-[#0d1117] group-hover:border-[#298DFF]/40 transition-colors">
-          <Icon className="h-4 w-4 text-[#298DFF]" />
+        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-card group-hover:border-primary/40 transition-colors">
+          <Icon className="h-4 w-4 text-primary" />
         </div>
-        <h2 className="text-xl font-semibold text-white tracking-tight">{title}</h2>
+        <h2 className="text-xl font-semibold text-foreground tracking-tight">{title}</h2>
       </div>
       <div className="ml-12 space-y-3">
         {content.map((paragraph, i) => (
           <p
             key={i}
-            className="text-sm leading-relaxed text-[#9CA3AF]"
+            className="text-sm leading-relaxed text-muted-foreground"
             dangerouslySetInnerHTML={{
               __html: paragraph.replace(
                 /\*\*(.*?)\*\*/g,
-                '<strong class="text-[#c4cad3] font-medium">$1</strong>'
+                '<strong class="text-foreground font-medium">$1</strong>',
               ),
             }}
           />

@@ -13,10 +13,10 @@ import { timelineData } from "@/lib/mock-data";
 
 const series = [
   { key: "Outage", color: "#FF4757" },
-  { key: "Payment", color: "#00D9FF" },
+  { key: "Payment", color: "#0ea5e9" }, // Sky blue (excellent contrast in both themes)
   { key: "PR", color: "#ec4899" },
-  { key: "Bug", color: "#FFA726" },
-  { key: "Fraud", color: "#a78bfa" },
+  { key: "Bug", color: "#f97316" },
+  { key: "Fraud", color: "#8b5cf6" },
 ];
 
 export function AnomalyTimeline() {
@@ -32,17 +32,23 @@ export function AnomalyTimeline() {
               </linearGradient>
             ))}
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#1F2530" vertical={false} />
-          <XAxis dataKey="time" stroke="#5b6473" tick={{ fontSize: 11 }} interval={2} />
-          <YAxis stroke="#5b6473" tick={{ fontSize: 11 }} width={32} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+          <XAxis
+            dataKey="time"
+            stroke="var(--muted-foreground)"
+            tick={{ fontSize: 11 }}
+            interval={2}
+          />
+          <YAxis stroke="var(--muted-foreground)" tick={{ fontSize: 11 }} width={32} />
           <Tooltip
             contentStyle={{
-              background: "#12161F",
-              border: "1px solid #1F2530",
+              background: "var(--card)",
+              border: "1px solid var(--border)",
               borderRadius: 8,
               fontSize: 12,
+              color: "var(--foreground)",
             }}
-            labelStyle={{ color: "#9aa3b2" }}
+            labelStyle={{ color: "var(--muted-foreground)" }}
           />
           <ReferenceArea
             x1="18:00"

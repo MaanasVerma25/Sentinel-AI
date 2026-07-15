@@ -43,7 +43,7 @@ export function CrisisClusterCard({
             <div className="h-7 w-28">
               <Sparkline
                 data={cluster.spark}
-                color={isCrit ? "#FF4757" : "#00D9FF"}
+                color={isCrit ? "var(--critical)" : "var(--cyan)"}
                 className="h-full w-full"
               />
             </div>

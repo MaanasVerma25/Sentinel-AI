@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { useTheme } from "@/hooks/useTheme";
 import {
   Loader2,
   Save,
@@ -15,6 +16,8 @@ import {
   Facebook,
   Instagram,
   BellRing,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings")({
@@ -23,6 +26,7 @@ export const Route = createFileRoute("/_app/settings")({
 
 function SettingsPage() {
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<"alerting" | "company">("alerting");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -63,8 +67,12 @@ function SettingsPage() {
       setWarning(localStorage.getItem("sentinel_settings_warning") ?? "100");
       setMinMentions(localStorage.getItem("sentinel_settings_min_mentions") ?? "25");
       setDetectionWindow(localStorage.getItem("sentinel_settings_detection_window") ?? "5");
-      setSlackChannel(localStorage.getItem("sentinel_settings_slack_channel") ?? "#incidents-critical");
-      setOnCallEmail(localStorage.getItem("sentinel_settings_on_call_email") ?? "oncall@sentinel.ai");
+      setSlackChannel(
+        localStorage.getItem("sentinel_settings_slack_channel") ?? "#incidents-critical",
+      );
+      setOnCallEmail(
+        localStorage.getItem("sentinel_settings_on_call_email") ?? "oncall@sentinel.ai",
+      );
       setPagerDutyKey(localStorage.getItem("sentinel_settings_pagerduty_key") ?? "••••••••••••");
     }
 
@@ -149,20 +157,18 @@ function SettingsPage() {
         toast.success("Alert settings saved successfully!");
       } else {
         // Save company onboarding details
-        const { error: onboardingError } = await supabase
-          .from("onboarding_profiles")
-          .upsert({
-            user_id: user.id,
-            company_name: companyName,
-            website,
-            industry,
-            company_size: companySize,
-            description,
-            twitter_handle: twitter,
-            linkedin_url: linkedin,
-            facebook_url: facebook,
-            instagram_handle: instagram,
-          });
+        const { error: onboardingError } = await supabase.from("onboarding_profiles").upsert({
+          user_id: user.id,
+          company_name: companyName,
+          website,
+          industry,
+          company_size: companySize,
+          description,
+          twitter_handle: twitter,
+          linkedin_url: linkedin,
+          facebook_url: facebook,
+          instagram_handle: instagram,
+        });
 
         if (onboardingError) throw onboardingError;
 
@@ -272,12 +278,51 @@ function SettingsPage() {
 
       {activeTab === "alerting" ? (
         <div className="space-y-6">
+          {/* ── Appearance (Device Stored) ── */}
+          <section className="rounded-lg border border-border bg-card p-5 space-y-4">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--cyan)] flex items-center gap-2">
+              Appearance (Device Stored)
+            </h2>
+            <div className="space-y-3">
+              <span className="block text-xs text-muted-foreground font-mono uppercase">
+                Interface Theme
+              </span>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setTheme("dark")}
+                  className={`flex items-center gap-2 rounded-md border px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                    theme === "dark"
+                      ? "border-[var(--cyan)] bg-[color-mix(in_oklab,var(--cyan)_14%,transparent)] text-[var(--cyan)]"
+                      : "border-border bg-background text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Moon className="h-4 w-4" /> Dark Mode
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme("light")}
+                  className={`flex items-center gap-2 rounded-md border px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                    theme === "light"
+                      ? "border-[var(--cyan)] bg-[color-mix(in_oklab,var(--cyan)_14%,transparent)] text-[var(--cyan)]"
+                      : "border-border bg-background text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Sun className="h-4 w-4" /> Light Mode
+                </button>
+              </div>
+              <span className="text-[10px] text-muted-foreground leading-normal block">
+                Choose between dark and light appearance for the entire command center.
+              </span>
+            </div>
+          </section>
+
           {/* ── Calibration preferences (Supabase) ── */}
           <section className="rounded-lg border border-border bg-card p-5 space-y-5">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--cyan)]">
               System Calibration (Database Sync)
             </h2>
-            
+
             <div className="space-y-2">
               <div className="flex justify-between text-xs text-muted-foreground font-mono">
                 <span>ALERT LIMIT SENSITIVITY</span>
@@ -292,7 +337,8 @@ function SettingsPage() {
                 className="w-full h-1 bg-secondary appearance-none cursor-pointer accent-[var(--cyan)]"
               />
               <span className="text-[10px] text-muted-foreground leading-normal block">
-                Sets the global event surge baseline. surging above this value triggers immediate incident generation.
+                Sets the global event surge baseline. surging above this value triggers immediate
+                incident generation.
               </span>
             </div>
 
@@ -305,8 +351,12 @@ function SettingsPage() {
                   className="mt-0.5 rounded border-border bg-background text-[var(--cyan)] focus:ring-[var(--cyan)] cursor-pointer"
                 />
                 <div>
-                  <span className="text-xs font-medium text-foreground block">Notify via Slack</span>
-                  <span className="text-[10px] text-muted-foreground block">Push critical updates to integrated Slack workspace</span>
+                  <span className="text-xs font-medium text-foreground block">
+                    Notify via Slack
+                  </span>
+                  <span className="text-[10px] text-muted-foreground block">
+                    Push critical updates to integrated Slack workspace
+                  </span>
                 </div>
               </label>
 
@@ -318,8 +368,12 @@ function SettingsPage() {
                   className="mt-0.5 rounded border-border bg-background text-[var(--cyan)] focus:ring-[var(--cyan)] cursor-pointer"
                 />
                 <div>
-                  <span className="text-xs font-medium text-foreground block">Notify via Email</span>
-                  <span className="text-[10px] text-muted-foreground block">Send urgent alerts to configured on-call email</span>
+                  <span className="text-xs font-medium text-foreground block">
+                    Notify via Email
+                  </span>
+                  <span className="text-[10px] text-muted-foreground block">
+                    Send urgent alerts to configured on-call email
+                  </span>
                 </div>
               </label>
             </div>
@@ -390,14 +444,9 @@ function SettingsPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--cyan)] flex items-center gap-2">
               <Building2 className="h-4 w-4 text-[var(--cyan)]" /> Company Profile
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field
-                label="Company Name"
-                value={companyName}
-                onChange={setCompanyName}
-                required
-              />
+              <Field label="Company Name" value={companyName} onChange={setCompanyName} required />
               <Field
                 label="Website URL"
                 type="url"
@@ -413,17 +462,27 @@ function SettingsPage() {
                 required
               />
               <div className="block">
-                <span className="mb-1 block text-xs text-muted-foreground font-mono uppercase">Company Size</span>
+                <span className="mb-1 block text-xs text-muted-foreground font-mono uppercase">
+                  Company Size
+                </span>
                 <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 focus-within:border-[var(--cyan)] transition-colors">
                   <select
                     value={companySize}
                     onChange={(e) => setCompanySize(e.target.value)}
-                    className="flex-1 bg-transparent text-sm focus:outline-none text-foreground appearance-none cursor-pointer"
+                    className="flex-1 bg-transparent text-sm focus:outline-none text-foreground appearance-none cursor-pointer font-sans"
                   >
-                    <option value="1-10" className="bg-background text-foreground">1 - 10</option>
-                    <option value="11-50" className="bg-background text-foreground">11 - 50</option>
-                    <option value="51-200" className="bg-background text-foreground">51 - 200</option>
-                    <option value="201+" className="bg-background text-foreground">201+</option>
+                    <option value="1-10" className="bg-card text-foreground">
+                      1 - 10
+                    </option>
+                    <option value="11-50" className="bg-card text-foreground">
+                      11 - 50
+                    </option>
+                    <option value="51-200" className="bg-card text-foreground">
+                      51 - 200
+                    </option>
+                    <option value="201+" className="bg-card text-foreground">
+                      201+
+                    </option>
                   </select>
                 </div>
               </div>

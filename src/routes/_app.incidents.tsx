@@ -176,9 +176,7 @@ function IncidentsPage() {
                 ? "border-current bg-[color-mix(in_oklab,currentColor_15%,transparent)]"
                 : "border-border bg-secondary/30 text-muted-foreground hover:text-foreground hover:border-foreground/30",
             )}
-            style={
-              activeSeverities.has(s.value) ? { color: s.color } : undefined
-            }
+            style={activeSeverities.has(s.value) ? { color: s.color } : undefined}
           >
             <span
               className={cn(
@@ -227,9 +225,7 @@ function IncidentsPage() {
         <span className="tabular-nums font-medium text-foreground">{filteredClusters.length}</span>
         <span>incident{filteredClusters.length === 1 ? "" : "s"} found</span>
         {hasActiveFilters && (
-          <span className="text-muted-foreground/60">
-            (filtered from {clusters.length} total)
-          </span>
+          <span className="text-muted-foreground/60">(filtered from {clusters.length} total)</span>
         )}
       </div>
 
@@ -237,7 +233,9 @@ function IncidentsPage() {
       {filteredClusters.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card py-16 text-center">
           <Search className="h-10 w-10 text-muted-foreground/30 mb-3" />
-          <p className="text-sm font-medium text-muted-foreground">No incidents match your filters</p>
+          <p className="text-sm font-medium text-muted-foreground">
+            No incidents match your filters
+          </p>
           <p className="mt-1 text-xs text-muted-foreground/60">
             Try adjusting your search or clearing filters
           </p>
