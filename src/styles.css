@@ -96,6 +96,43 @@
   --sidebar-ring: #298dff;
 }
 
+/* Light mode overrides */
+:root:not(.dark) {
+  --background: #f4f6fb;
+  --foreground: #0f1117;
+  --surface: #ffffff;
+  --surface-2: #e8edf5;
+  --card: #ffffff;
+  --card-foreground: #0f1117;
+  --popover: #ffffff;
+  --popover-foreground: #0f1117;
+  --primary: #1a74e8;
+  --primary-foreground: #ffffff;
+  --cyan: #1a74e8;
+  --secondary: #edf0f7;
+  --secondary-foreground: #0f1117;
+  --muted: #e8edf5;
+  --muted-foreground: #5a6478;
+  --accent: #e2e8f4;
+  --accent-foreground: #0f1117;
+  --destructive: #e03144;
+  --destructive-foreground: #ffffff;
+  --critical: #e03144;
+  --warning: #d4530a;
+  --safe: #16a34a;
+  --border: #c8d0e0;
+  --input: #e8edf5;
+  --ring: #1a74e8;
+  --sidebar: #eef1f8;
+  --sidebar-foreground: #3d4760;
+  --sidebar-primary: #1a74e8;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dde3f0;
+  --sidebar-accent-foreground: #0f1117;
+  --sidebar-border: #c8d0e0;
+  --sidebar-ring: #1a74e8;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -103,6 +140,9 @@
   html {
     background-color: var(--color-background);
     color-scheme: dark;
+  }
+  html:not(.dark) {
+    color-scheme: light;
   }
   body {
     background-color: var(--color-background);

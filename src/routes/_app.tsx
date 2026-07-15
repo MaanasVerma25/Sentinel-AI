@@ -39,6 +39,7 @@ const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
 function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const activeIncidents = clusters.filter((c) => c.severity === "critical").length;
@@ -118,6 +119,27 @@ function AppLayout() {
               );
             })}
           </nav>
+
+          {/* Theme toggle in sidebar */}
+          <button
+            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className={cn(
+              "mx-2 flex items-center gap-3 rounded-md border border-border bg-secondary/40 px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground",
+              collapsed && "justify-center px-0",
+            )}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-4 w-4 shrink-0 text-[var(--warning)]" />
+            ) : (
+              <Moon className="h-4 w-4 shrink-0 text-[var(--cyan)]" />
+            )}
+            {!collapsed && (
+              <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+            )}
+          </button>
+
           <button
             onClick={() => setCollapsed((v) => !v)}
             className="absolute bottom-4 left-2 right-2 flex items-center justify-center gap-2 rounded-md border border-border bg-secondary/40 py-1.5 text-xs text-muted-foreground hover:text-foreground"
@@ -226,6 +248,23 @@ function TopBar({
                   </Link>
                 );
               })}
+
+              {/* Theme toggle in mobile sheet nav */}
+              <button
+                type="button"
+                onClick={() => {
+                  setTheme(theme === "dark" ? "light" : "dark");
+                  setOpen(false);
+                }}
+                className="group flex items-center gap-3 rounded-md px-3 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground w-full"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-5 w-5 shrink-0 text-[var(--warning)]" />
+                ) : (
+                  <Moon className="h-5 w-5 shrink-0 text-[var(--cyan)]" />
+                )}
+                <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+              </button>
             </nav>
           </SheetContent>
         </Sheet>
