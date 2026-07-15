@@ -1,6 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
-import { AlertTriangle, MessageSquare, Timer, Plug, ArrowUpRight, ShieldAlert, RefreshCw, Search, Newspaper, Check, AlertCircle, Loader2 } from "lucide-react";
+import {
+  AlertTriangle,
+  MessageSquare,
+  Timer,
+  Plug,
+  ArrowUpRight,
+  ShieldAlert,
+  RefreshCw,
+  Search,
+  Newspaper,
+  Check,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import { clusters, type CrisisCluster } from "@/lib/mock-data";
 import { CountUp } from "@/components/count-up";
 import { AnomalyTimeline } from "@/components/anomaly-timeline";
@@ -20,7 +33,15 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { ingestForCompanyFn } from "@/lib/ingest/server-fn";
 import { toast } from "sonner";
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: Dashboard,
@@ -110,6 +131,7 @@ function Dashboard() {
   useEffect(() => {
     if (authLoading || !user) return;
 
+    const currentUser = user;
     let isMounted = true;
 
     async function checkOnboardingAndFetch() {
@@ -119,7 +141,7 @@ function Dashboard() {
         const { data: profile, error: profileErr } = await supabase
           .from("onboarding_profiles")
           .select("*")
-          .eq("user_id", user.id)
+          .eq("user_id", currentUser.id)
           .maybeSingle();
 
         if (profileErr) {
@@ -169,8 +191,10 @@ function Dashboard() {
                     data: { companyId: companyData.id },
                   });
                   setScanStats(summary);
-                  toast.success(`Initial scan complete! Ingested ${summary.newInserted} brand mentions.`);
-                  
+                  toast.success(
+                    `Initial scan complete! Ingested ${summary.newInserted} brand mentions.`,
+                  );
+
                   // Re-fetch mentions
                   const { data: freshMentions } = await supabase
                     .from("mentions")
@@ -214,7 +238,7 @@ function Dashboard() {
       });
       setScanStats(summary);
       toast.success(`Scan complete! Ingested ${summary.newInserted} new mentions.`);
-      
+
       const { data: freshMentions } = await supabase
         .from("mentions")
         .select("*")
@@ -246,19 +270,22 @@ function Dashboard() {
   // Real-time Chart Data (mentions by source over the last 7 days)
   const chartData = useMemo(() => {
     if (mentions.length === 0) return [];
-    
+
     const days: Record<string, { time: string; Reddit: number; News: number }> = {};
     const now = new Date();
-    
+
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(now.getDate() - i);
       const dateStr = d.toLocaleDateString([], { month: "short", day: "numeric" });
       days[dateStr] = { time: dateStr, Reddit: 0, News: 0 };
     }
-    
+
     for (const m of mentions) {
-      const dateStr = new Date(m.created_at).toLocaleDateString([], { month: "short", day: "numeric" });
+      const dateStr = new Date(m.created_at).toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+      });
       if (days[dateStr]) {
         if (m.source === "reddit") {
           days[dateStr].Reddit += 1;
@@ -267,7 +294,7 @@ function Dashboard() {
         }
       }
     }
-    
+
     return Object.values(days);
   }, [mentions]);
 
@@ -287,7 +314,7 @@ function Dashboard() {
   // --- Real-time Onboarded UI Layout ---
   if (isOnboarded && company) {
     const realActiveIncidents = mentions.filter(
-      (m) => m.sentiment === "critical" || m.sentiment === "negative"
+      (m) => m.sentiment === "critical" || m.sentiment === "negative",
     ).length;
 
     return (
@@ -296,15 +323,18 @@ function Dashboard() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Command Center</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Real-time monitoring for <span className="font-semibold text-white">{company.name}</span>.
+              Real-time monitoring for{" "}
+              <span className="font-semibold text-white">{company.name}</span>.
             </p>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-              <span className={cn(
-                "inline-flex h-2 w-2 rounded-full",
-                scanning ? "bg-[#298DFF] animate-pulse" : "bg-[var(--safe)] animate-pulse"
-              )} />
+              <span
+                className={cn(
+                  "inline-flex h-2 w-2 rounded-full",
+                  scanning ? "bg-[#298DFF] animate-pulse" : "bg-[var(--safe)] animate-pulse",
+                )}
+              />
               {scanning ? "SCANNING API FEEDS..." : "LISTENING LIVE"}
             </div>
             <Button
@@ -375,7 +405,7 @@ function Dashboard() {
                   Crawler ingestion volume by source over the last 7 days.
                 </p>
               </div>
-              
+
               {chartData.length > 0 ? (
                 <div className="h-72 w-full font-mono">
                   <ResponsiveContainer width="100%" height="100%">
@@ -441,20 +471,28 @@ function Dashboard() {
               <div>
                 <h2 className="text-lg font-bold tracking-tight">Signal Intelligence Feed</h2>
                 <p className="text-xs text-muted-foreground font-mono uppercase">
-                  Real-time crawls matching: {company.name} {company.aliases?.length > 0 && `(aliases: ${company.aliases.join(", ")})`}
+                  Real-time crawls matching: {company.name}{" "}
+                  {company.aliases?.length > 0 && `(aliases: ${company.aliases.join(", ")})`}
                 </p>
               </div>
 
               {mentions.length > 0 ? (
                 <div className="grid gap-4">
                   {mentions.slice(0, 10).map((m) => (
-                    <div key={m.id} className="rounded-lg border border-border bg-card p-5 space-y-3">
+                    <div
+                      key={m.id}
+                      className="rounded-lg border border-border bg-card p-5 space-y-3"
+                    >
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className={cn(
-                            "inline-flex items-center gap-1.5 px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider",
-                            m.source === "reddit" ? "bg-[#FF4500]/15 text-[#FF4500]" : "bg-[#298DFF]/15 text-[#298DFF]"
-                          )}>
+                          <span
+                            className={cn(
+                              "inline-flex items-center gap-1.5 px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider",
+                              m.source === "reddit"
+                                ? "bg-[#FF4500]/15 text-[#FF4500]"
+                                : "bg-[#298DFF]/15 text-[#298DFF]",
+                            )}
+                          >
                             {m.source === "reddit" ? (
                               <>
                                 <MessageSquare className="h-3 w-3" />
@@ -517,15 +555,22 @@ function Dashboard() {
               </h3>
               <div className="space-y-3 text-xs leading-relaxed">
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">Company Name</span>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">
+                    Company Name
+                  </span>
                   <span className="font-bold text-white text-sm">{company.name}</span>
                 </div>
                 {company.aliases?.length > 0 && (
                   <div>
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">Aliases Tracked</span>
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">
+                      Aliases Tracked
+                    </span>
                     <div className="flex flex-wrap gap-1.5 mt-1">
                       {company.aliases.map((a: string) => (
-                        <span key={a} className="px-2 py-0.5 bg-[#1e2227] border border-[#343940] font-mono text-[9px]">
+                        <span
+                          key={a}
+                          className="px-2 py-0.5 bg-[#1e2227] border border-[#343940] font-mono text-[9px]"
+                        >
                           {a}
                         </span>
                       ))}
@@ -536,22 +581,35 @@ function Dashboard() {
                   <>
                     {onboardingProfile.website && (
                       <div>
-                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">Website URL</span>
-                        <a href={onboardingProfile.website} target="_blank" rel="noopener noreferrer" className="text-[#298DFF] hover:underline">
+                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">
+                          Website URL
+                        </span>
+                        <a
+                          href={onboardingProfile.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#298DFF] hover:underline"
+                        >
                           {onboardingProfile.website}
                         </a>
                       </div>
                     )}
                     {onboardingProfile.industry && (
                       <div>
-                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">Industry Sector</span>
+                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">
+                          Industry Sector
+                        </span>
                         <span className="text-white">{onboardingProfile.industry}</span>
                       </div>
                     )}
                     {onboardingProfile.description && (
                       <div>
-                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">Profile Description</span>
-                        <p className="text-muted-foreground text-[11px] mt-1">{onboardingProfile.description}</p>
+                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#6C7584] block mb-1">
+                          Profile Description
+                        </span>
+                        <p className="text-muted-foreground text-[11px] mt-1">
+                          {onboardingProfile.description}
+                        </p>
                       </div>
                     )}
                   </>
@@ -569,7 +627,9 @@ function Dashboard() {
                     <span>Reddit Crawler</span>
                     <span className="text-[#2ed573]">Active</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Hits search.json API using User-Agent. Crawls posts and comments.</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Hits search.json API using User-Agent. Crawls posts and comments.
+                  </p>
                 </div>
 
                 <div className="p-3 border border-[#343940] bg-black/40 space-y-2">
@@ -577,12 +637,16 @@ function Dashboard() {
                     <span>Google News RSS</span>
                     <span className="text-[#2ed573]">Active</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Parses RSS feed via rss-parser. Crawls global news headlines.</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Parses RSS feed via rss-parser. Crawls global news headlines.
+                  </p>
                 </div>
 
                 {scanStats && (
                   <div className="border border-border p-3 space-y-2">
-                    <span className="text-[10px] uppercase tracking-wider text-[#298DFF] block">Last Scan Results</span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#298DFF] block">
+                      Last Scan Results
+                    </span>
                     <ul className="text-[10px] space-y-1 text-muted-foreground">
                       <li>• Total Found: {scanStats.totalFound} mentions</li>
                       <li>• New Ingested: {scanStats.newInserted} entries</li>

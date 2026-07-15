@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Bell, AlertTriangle, Eye, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { clusters, type CrisisCluster, type Severity } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
@@ -68,9 +64,7 @@ export function NotificationsPanel({
   };
 
   const handleClick = (notif: NotificationItem) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n)),
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n)));
     onSelectIncident?.(notif.cluster);
     setOpen(false);
   };
@@ -96,9 +90,7 @@ export function NotificationsPanel({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold tracking-tight text-foreground">
-              Notifications
-            </h3>
+            <h3 className="text-sm font-bold tracking-tight text-foreground">Notifications</h3>
             {unreadCount > 0 && (
               <span className="rounded-md bg-[var(--critical)] px-1.5 py-0.5 text-[10px] font-bold text-white">
                 {unreadCount} new
@@ -142,17 +134,13 @@ export function NotificationsPanel({
                       severityBg[notif.cluster.severity],
                     )}
                   >
-                    <Icon
-                      className={cn("h-3.5 w-3.5", severityColor[notif.cluster.severity])}
-                    />
+                    <Icon className={cn("h-3.5 w-3.5", severityColor[notif.cluster.severity])} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p
                       className={cn(
                         "text-xs leading-relaxed",
-                        notif.read
-                          ? "text-muted-foreground"
-                          : "text-foreground font-medium",
+                        notif.read ? "text-muted-foreground" : "text-foreground font-medium",
                       )}
                     >
                       {notif.message}

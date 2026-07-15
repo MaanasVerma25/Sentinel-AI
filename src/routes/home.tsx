@@ -71,14 +71,14 @@ function TechnicalRadar() {
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
       {/* Grid crosshairs */}
-      <div className="absolute h-full w-px bg-[#343940]/50" />
-      <div className="absolute w-full h-px bg-[#343940]/50" />
+      <div className="absolute h-full w-px bg-border/50" />
+      <div className="absolute w-full h-px bg-border/50" />
 
       {/* Concentric technical boxes (engineered vibe instead of round rings) */}
       {[1, 2, 3, 4].map((i) => (
         <div
           key={i}
-          className="absolute border border-[#343940]"
+          className="absolute border border-border"
           style={{
             width: `${i * 22}%`,
             height: `${i * 22}%`,
@@ -114,15 +114,15 @@ function FloatingBadge({
 }) {
   return (
     <div
-      className={`absolute flex items-center gap-3 rounded-none border border-[#343940] bg-[#131518] px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.8)] backdrop-blur-md ${className}`}
+      className={`absolute flex items-center gap-3 rounded-none border border-border bg-card px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.8)] backdrop-blur-md ${className}`}
       style={{ animation: "float 6s ease-in-out infinite" }}
     >
-      <span className="flex h-8 w-8 items-center justify-center rounded-none bg-[#298DFF]/10 border border-[#298DFF]/30">
-        <Icon className="h-4 w-4 text-[#298DFF]" />
+      <span className="flex h-8 w-8 items-center justify-center rounded-none bg-primary/10 border border-primary/30">
+        <Icon className="h-4 w-4 text-primary" />
       </span>
       <div>
-        <p className="text-xs font-bold text-white uppercase tracking-wider">{label}</p>
-        <p className="text-[10px] text-[#6C7584] font-mono">{sub}</p>
+        <p className="text-xs font-bold text-foreground uppercase tracking-wider">{label}</p>
+        <p className="text-[10px] text-muted-foreground font-mono">{sub}</p>
       </div>
     </div>
   );
@@ -141,9 +141,9 @@ function FeatureCard({
   color: string;
 }) {
   return (
-    <div className="group relative rounded-none border border-[#343940] bg-[#131518] p-6 transition-all duration-200 hover:border-[#298DFF]/50 hover:bg-[#131518]/80">
+    <div className="group relative rounded-none border border-border bg-card p-6 transition-all duration-200 hover:border-primary/50 hover:bg-card/80">
       {/* Top corner tech indicator */}
-      <div className="absolute top-0 right-0 h-2 w-2 bg-transparent border-t border-r border-[#343940] group-hover:border-[#298DFF]" />
+      <div className="absolute top-0 right-0 h-2 w-2 bg-transparent border-t border-r border-border group-hover:border-primary" />
       <div
         className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-none border"
         style={{
@@ -153,8 +153,8 @@ function FeatureCard({
       >
         <Icon className="h-5 w-5" style={{ color }} />
       </div>
-      <h3 className="mb-2 text-md font-bold text-white tracking-tight">{title}</h3>
-      <p className="text-xs leading-relaxed text-[#6C7584]">{description}</p>
+      <h3 className="mb-2 text-md font-bold text-foreground tracking-tight">{title}</h3>
+      <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>
     </div>
   );
 }
@@ -162,12 +162,12 @@ function FeatureCard({
 // ─── stat card ───────────────────────────────────────────────────────────────
 function StatCard({ value, suffix, label }: { value: number; suffix: string; label: string }) {
   return (
-    <div className="rounded-none border border-[#343940] bg-[#131518] p-6 text-center relative group">
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-[#298DFF] transition-all duration-300" />
-      <p className="text-3xl font-bold tracking-tight text-[#298DFF] font-mono">
+    <div className="rounded-none border border-border bg-card p-6 text-center relative group">
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-primary transition-all duration-300" />
+      <p className="text-3xl font-bold tracking-tight text-primary font-mono">
         <Counter target={value} suffix={suffix} />
       </p>
-      <p className="mt-2 text-xs uppercase tracking-wider text-[#6C7584]">{label}</p>
+      <p className="mt-2 text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
     </div>
   );
 }
@@ -212,28 +212,30 @@ function TestimonialCard({
   tip?: string;
 }) {
   return (
-    <div className="rounded-none border border-[#343940] bg-[#131518] p-6 flex flex-col justify-between h-full relative">
+    <div className="rounded-none border border-border bg-card p-6 flex flex-col justify-between h-full relative">
       <div>
         <div className="mb-4 flex gap-1">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} className="h-3 w-3 fill-[#FF6C3D] text-[#FF6C3D]" />
+            <Star key={i} className="h-3 w-3 fill-orange-500 text-orange-500" />
           ))}
         </div>
-        <p className="mb-4 text-xs italic leading-relaxed text-[#A9B2C3]">"{quote}"</p>
+        <p className="mb-4 text-xs italic leading-relaxed text-foreground/80">"{quote}"</p>
         {tip && (
-          <div className="mb-6 border-l-2 border-[#298DFF] bg-[#298DFF]/5 px-3 py-2 text-[10px] font-mono text-[#298DFF]">
-            <span className="font-bold uppercase tracking-wider block text-[9px] mb-1 text-[#298DFF]">PRO TIP:</span>
+          <div className="mb-6 border-l-2 border-primary bg-primary/5 px-3 py-2 text-[10px] font-mono text-primary">
+            <span className="font-bold uppercase tracking-wider block text-[9px] mb-1 text-primary">
+              PRO TIP:
+            </span>
             {tip}
           </div>
         )}
       </div>
-      <div className="flex items-center gap-3 border-t border-[#343940]/60 pt-4 mt-auto">
-        <div className="flex h-8 w-8 items-center justify-center rounded-none bg-[#298DFF] text-xs font-bold text-white font-mono">
+      <div className="flex items-center gap-3 border-t border-border/60 pt-4 mt-auto">
+        <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary text-xs font-bold text-white font-mono">
           {initials}
         </div>
         <div>
-          <p className="text-xs font-bold text-white">{name}</p>
-          <p className="text-[10px] text-[#6C7584] uppercase tracking-wider">{role}</p>
+          <p className="text-xs font-bold text-foreground">{name}</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{role}</p>
         </div>
       </div>
     </div>
@@ -275,10 +277,10 @@ function HomePage() {
   void tick;
 
   const liveAlerts = [
-    { id: 1, text: "CRITICAL SPIKE DETECTED · SUPPORT CHAT", color: "#FF4757" },
-    { id: 2, text: "SENTIMENT ANOMALY DETECTED · TWITTER/X", color: "#FF6C3D" },
-    { id: 3, text: "PAYMENT FAILURE CLUSTER · EMAIL", color: "#FF4757" },
-    { id: 4, text: "ALL SIGNAL SOURCES NOMINAL", color: "#2ED573" },
+    { id: 1, text: "CRITICAL SPIKE DETECTED · SUPPORT CHAT", color: "var(--critical)" },
+    { id: 2, text: "SENTIMENT ANOMALY DETECTED · TWITTER/X", color: "var(--warning)" },
+    { id: 3, text: "PAYMENT FAILURE CLUSTER · EMAIL", color: "var(--critical)" },
+    { id: 4, text: "ALL SIGNAL SOURCES NOMINAL", color: "var(--safe)" },
   ];
   const [alertIdx, setAlertIdx] = useState(0);
   useEffect(() => {
@@ -313,9 +315,10 @@ function HomePage() {
         }
         .grid-bg {
           background-image:
-            linear-gradient(rgba(52, 57, 64, 0.25) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(52, 57, 64, 0.25) 1px, transparent 1px);
+            linear-gradient(var(--border) 1px, transparent 1px),
+            linear-gradient(90deg, var(--border) 1px, transparent 1px);
           background-size: 50px 50px;
+          opacity: 0.25;
         }
         .tech-line {
           position: relative;
@@ -327,34 +330,37 @@ function HomePage() {
           left: 0;
           width: 24px;
           height: 2px;
-          background-color: #298DFF;
+          background-color: var(--primary);
         }
       `}</style>
 
-      <div className="min-h-screen bg-black text-white font-sans selection:bg-[#298DFF]/30">
+      <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
+        {/* Grid Overlay */}
+        <div className="absolute inset-0 grid-bg pointer-events-none" />
+
         {/* ── Navbar ── */}
-        <nav className="fixed top-0 z-50 w-full border-b border-[#343940] bg-black/90 backdrop-blur-md">
+        <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-md">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <Link to="/home" className="flex items-center gap-2.5">
-              <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-none bg-[#298DFF]/15 border border-[#298DFF]/30 text-[#298DFF]">
+              <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-none bg-primary/15 border border-primary/30 text-primary">
                 <Radar className="h-4 w-4" />
-                <span className="absolute inset-0 border border-[#298DFF]/60 animate-ping opacity-40" />
+                <span className="absolute inset-0 border border-primary/60 animate-ping opacity-40" />
               </span>
-              <span className="font-bold tracking-tight text-white uppercase text-sm font-mono">
-                Sentinel <span className="text-[#298DFF]">AI</span>
+              <span className="font-bold tracking-tight text-foreground uppercase text-sm font-mono">
+                Sentinel <span className="text-primary">AI</span>
               </span>
             </Link>
-            <div className="hidden items-center gap-8 text-xs font-mono uppercase tracking-wider text-[#6C7584] md:flex">
-              <a href="#features" className="transition-colors hover:text-white">
+            <div className="hidden items-center gap-8 text-xs font-mono uppercase tracking-wider text-muted-foreground md:flex">
+              <a href="#features" className="transition-colors hover:text-foreground">
                 Features
               </a>
-              <a href="#how-it-works" className="transition-colors hover:text-white">
+              <a href="#how-it-works" className="transition-colors hover:text-foreground">
                 How it works
               </a>
-              <a href="#stats" className="transition-colors hover:text-white">
+              <a href="#stats" className="transition-colors hover:text-foreground">
                 Impact
               </a>
-              <a href="#testimonials" className="transition-colors hover:text-white">
+              <a href="#testimonials" className="transition-colors hover:text-foreground">
                 Testimonials
               </a>
             </div>
@@ -363,13 +369,13 @@ function HomePage() {
                 <>
                   <Link
                     to="/setup"
-                    className="inline-flex items-center gap-1.5 rounded-none border border-[#343940]/60 bg-[#131518] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-[#6C7584] hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-none border border-border bg-card px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Set Up Now
                   </Link>
                   <Link
                     to="/dashboard"
-                    className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                    className="inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90"
                   >
                     Dashboard <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
@@ -378,78 +384,78 @@ function HomePage() {
                 <div className="flex items-center gap-8">
                   <Link
                     to="/dashboard"
-                    className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                    className="inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90"
                   >
                     Dashboard <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
-                  
+
                   {/* Account Dropdown */}
                   <div className="relative" ref={dropdownRef}>
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#298DFF] to-blue-700 text-xs font-bold text-black border border-transparent hover:border-[#298DFF]/60 cursor-pointer shadow-[0_0_12px_rgba(41,141,255,0.2)] focus:outline-none transition-colors"
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary to-blue-700 text-xs font-bold text-white border border-transparent hover:border-primary/60 cursor-pointer shadow-[0_0_12px_rgba(41,141,255,0.2)] focus:outline-none transition-colors"
                     >
                       {getInitials(user)}
                     </button>
-                    
+
                     {dropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-64 rounded-none border border-[#343940] bg-[#131518] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.8)] backdrop-blur-md z-[100] animate-fade-up">
+                      <div className="absolute right-0 mt-2 w-64 rounded-none border border-border bg-card p-4 shadow-[0_8px_30px_rgb(0,0,0,0.15)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.8)] backdrop-blur-md z-[100] animate-fade-up">
                         {/* Header details */}
-                        <div className="mb-3 border-b border-[#343940]/60 pb-3">
-                          <p className="text-[10px] font-mono uppercase tracking-widest text-[#298DFF] mb-0.5">
+                        <div className="mb-3 border-b border-border pb-3">
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-primary mb-0.5">
                             [ Active Session ]
                           </p>
-                          <p className="text-xs font-bold text-white truncate max-w-full">
+                          <p className="text-xs font-bold text-foreground truncate max-w-full">
                             {user.user_metadata?.full_name || "Sentinel Operator"}
                           </p>
-                          <p className="text-[9px] font-mono text-[#6C7584] truncate max-w-full">
+                          <p className="text-[9px] font-mono text-muted-foreground truncate max-w-full">
                             {user.email}
                           </p>
                           {user.user_metadata?.company && (
-                            <p className="text-[9px] font-mono text-[#6C7584] truncate max-w-full mt-0.5">
+                            <p className="text-[9px] font-mono text-muted-foreground truncate max-w-full mt-0.5">
                               Org: {user.user_metadata.company}
                             </p>
                           )}
                         </div>
-                        
+
                         {/* Links/Actions */}
                         <div className="flex flex-col gap-1">
                           <Link
                             to="/dashboard"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-primary/10 font-mono transition-colors"
                           >
                             <LayoutDashboard className="h-3.5 w-3.5" /> DASHBOARD
                           </Link>
                           <Link
                             to="/settings"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-primary/10 font-mono transition-colors"
                           >
                             <SettingsIcon className="h-3.5 w-3.5" /> SETTINGS
                           </Link>
                           <Link
                             to="/onboarding"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-primary/10 font-mono transition-colors"
                           >
                             <Building2 className="h-3.5 w-3.5" /> COMPANY DETAILS
                           </Link>
                           <Link
                             to="/setup"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-[#A9B2C3] hover:text-white hover:bg-[#298DFF]/10 font-mono transition-colors"
+                            className="flex items-center gap-2 rounded-none px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-primary/10 font-mono transition-colors"
                           >
                             <User className="h-3.5 w-3.5" /> SETUP FLOW
                           </Link>
-                          <div className="my-1 border-t border-[#343940]/40" />
+                          <div className="my-1 border-t border-border/40" />
                           <button
                             onClick={async () => {
                               setDropdownOpen(false);
                               await signOut();
                               toast.success("Signed out successfully.");
                             }}
-                            className="flex w-full items-center gap-2 rounded-none px-2 py-1.5 text-left text-xs text-[#FF4757] hover:text-white hover:bg-[#FF4757]/10 font-mono transition-colors cursor-pointer"
+                            className="flex w-full items-center gap-2 rounded-none px-2 py-1.5 text-left text-xs text-[var(--critical)] hover:text-foreground hover:bg-[var(--critical)]/10 font-mono transition-colors cursor-pointer"
                           >
                             <LogOut className="h-3.5 w-3.5" /> SIGN OUT
                           </button>
@@ -462,13 +468,13 @@ function HomePage() {
                 <>
                   <Link
                     to="/setup"
-                    className="inline-flex items-center gap-1.5 rounded-none border border-[#343940]/60 bg-[#131518] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-[#6C7584] hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-none border border-border bg-card px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Set Up Now
                   </Link>
                   <Link
                     to="/dashboard"
-                    className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90"
+                    className="inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90"
                   >
                     Dashboard <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
@@ -479,21 +485,21 @@ function HomePage() {
         </nav>
 
         {/* ── Hero ── */}
-        <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-24 pb-16 grid-bg hero-glow">
+        <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-24 pb-16 hero-glow">
           {/* ── Interactive 3D Banner ── */}
-          <div className="w-full max-w-7xl px-6 mb-8">
+          <div className="w-full max-w-7xl px-6 mb-8 z-10">
             <SplineSceneBasic />
           </div>
           {/* Tech dot element for engineering vibe */}
-          <div className="absolute top-24 left-10 text-[9px] font-mono text-[#6C7584]/60 hidden lg:block">
+          <div className="absolute top-24 left-10 text-[9px] font-mono text-muted-foreground/60 hidden lg:block">
             SYS.LOC: //US-WEST.SENTINEL
           </div>
-          <div className="absolute top-24 right-10 text-[9px] font-mono text-[#6C7584]/60 hidden lg:block">
+          <div className="absolute top-24 right-10 text-[9px] font-mono text-muted-foreground/60 hidden lg:block">
             STATUS: ACTIVE // SCANNING
           </div>
 
           {/* live alert ticker */}
-          <div className="animate-fade-up mb-8 flex items-center gap-3 rounded-none border border-[#343940] bg-[#131518] px-4 py-2">
+          <div className="animate-fade-up mb-8 flex items-center gap-3 rounded-none border border-border bg-card px-4 py-2 z-10">
             <span className="relative flex h-1.5 w-1.5">
               <span
                 className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
@@ -504,7 +510,10 @@ function HomePage() {
                 style={{ backgroundColor: alert.color }}
               />
             </span>
-            <span key={alertIdx} className="animate-ticker text-[10px] font-mono tracking-wider">
+            <span
+              key={alertIdx}
+              className="animate-ticker text-[10px] font-mono tracking-wider text-foreground"
+            >
               <span className="font-bold mr-1.5" style={{ color: alert.color }}>
                 SYSTEM_ALERT //
               </span>{" "}
@@ -513,13 +522,13 @@ function HomePage() {
           </div>
 
           {/* headline */}
-          <div className="animate-fade-up-1 px-6 text-center max-w-5xl">
-            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-[1.1] tracking-tight text-white md:text-6xl uppercase">
+          <div className="animate-fade-up-1 px-6 text-center max-w-5xl z-10">
+            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-6xl uppercase">
               Detect crises
               <br />
-              <span className="text-[#298DFF]">before they ignite</span>
+              <span className="text-primary">before they ignite</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[#6C7584] md:text-base">
+            <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
               Sentinel AI monitors your support channels, social media, reviews, and email in real
               time — surfacing critical signals and clustering incidents so your team responds in
               minutes, not hours.
@@ -527,27 +536,27 @@ function HomePage() {
           </div>
 
           {/* CTAs */}
-          <div className="animate-fade-up-2 mt-10 flex flex-wrap items-center justify-center gap-4 px-6 w-full">
+          <div className="animate-fade-up-2 mt-10 flex flex-wrap items-center justify-center gap-4 px-6 w-full z-10">
             <Link
               to="/setup"
-              className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-8 py-3.5 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90 w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 rounded-none bg-primary px-8 py-3.5 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90 w-full sm:w-auto justify-center"
             >
               <Plug className="h-4 w-4" /> Set Up Now
             </Link>
             <Link
               to="/dashboard"
-              className="inline-flex items-center gap-2 rounded-none border border-[#343940] bg-[#131518] px-8 py-3.5 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#131518]/70 w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 rounded-none border border-border bg-card px-8 py-3.5 text-xs font-bold font-mono uppercase tracking-wider text-foreground transition-colors hover:bg-card/70 w-full sm:w-auto justify-center"
             >
               <Radar className="h-4 w-4" /> Open Command Center
             </Link>
           </div>
 
           {/* social proof row */}
-          <div className="animate-fade-up-3 mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-mono uppercase tracking-wider text-[#6C7584]">
+          <div className="animate-fade-up-3 mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground z-10">
             {["No credit card required", "SOC 2 Type II certified", "< 30 s detection latency"].map(
               (t) => (
                 <span key={t} className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-[#298DFF]" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
                   {t}
                 </span>
               ),
@@ -555,12 +564,12 @@ function HomePage() {
           </div>
 
           {/* floating visual – radar + badges */}
-          <div className="relative mt-16 h-[320px] w-[320px] md:h-[380px] md:w-[380px]">
+          <div className="relative mt-16 h-[320px] w-[320px] md:h-[380px] md:w-[380px] z-10">
             <TechnicalRadar />
             {/* center icon */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-none bg-[#298DFF]/10 border border-[#298DFF]/40 shadow-[0_0_40px_rgba(41,141,255,0.15)]">
-                <Radar className="h-8 w-8 text-[#298DFF]" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-none bg-primary/10 border border-primary/40 shadow-[0_0_40px_rgba(41,141,255,0.15)]">
+                <Radar className="h-8 w-8 text-primary" />
               </div>
             </div>
             {/* floating badges */}
@@ -580,86 +589,89 @@ function HomePage() {
         </section>
 
         {/* ── Source logos ── */}
-        <section className="border-y border-[#343940] bg-[#131518]/20 py-12">
+        <section className="border-y border-border bg-card/20 py-12 z-10 relative">
           <div className="mx-auto max-w-7xl px-6">
-            <p className="mb-8 text-center text-[10px] font-mono uppercase tracking-widest text-[#6C7584]">
+            <p className="mb-8 text-center text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
               // Monitors signals across every channel
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <SourcePill icon={MessageSquare} label="Support Chat" color="#298DFF" />
-              <SourcePill icon={Twitter} label="Social Media" color="#FF6C3D" />
-              <SourcePill icon={Star} label="App Reviews" color="#FF6C3D" />
-              <SourcePill icon={Mail} label="Email" color="#2ED573" />
-              <SourcePill icon={Globe} label="Forums" color="#298DFF" />
-              <SourcePill icon={Cpu} label="Internal Logs" color="#FF4757" />
+              <SourcePill icon={MessageSquare} label="Support Chat" color="var(--primary)" />
+              <SourcePill icon={Twitter} label="Social Media" color="var(--warning)" />
+              <SourcePill icon={Star} label="App Reviews" color="var(--warning)" />
+              <SourcePill icon={Mail} label="Email" color="var(--safe)" />
+              <SourcePill icon={Globe} label="Forums" color="var(--primary)" />
+              <SourcePill icon={Cpu} label="Internal Logs" color="var(--critical)" />
             </div>
           </div>
         </section>
 
         {/* ── Features ── */}
-        <section id="features" className="py-24 border-b border-[#343940]">
+        <section id="features" className="py-24 border-b border-border z-10 relative">
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-20 text-center tech-line pb-8 max-w-xl mx-auto">
-              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
+              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-primary">
                 [ SYSTEM CAPABILITIES ]
               </p>
-              <h2 className="text-3xl font-extrabold tracking-tight uppercase text-white md:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-tight uppercase text-foreground md:text-4xl">
                 Everything you need to stay ahead
               </h2>
-              <p className="mt-4 text-xs leading-relaxed text-[#6C7584]">
+              <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
                 From real-time ingestion to intelligent clustering, Sentinel AI gives your
                 operations team superpowers.
               </p>
             </div>
-            <div className="grid gap-px bg-[#343940] sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
               <FeatureCard
                 icon={Zap}
                 title="Real-Time Detection"
                 description="Ingests thousands of messages per second across all sources. AI models flag anomalies within seconds, not minutes."
-                color="#298DFF"
+                color="var(--primary)"
               />
               <FeatureCard
                 icon={Shield}
                 title="Intelligent Clustering"
                 description="Groups related signals into coherent incidents automatically, eliminating alert fatigue and giving context at a glance."
-                color="#2ED573"
+                color="var(--safe)"
               />
               <FeatureCard
                 icon={TrendingUp}
                 title="Severity Scoring"
                 description="Each incident is scored across volume, sentiment velocity, and spread rate — so your team always knows what needs attention first."
-                color="#FF6C3D"
+                color="var(--warning)"
               />
               <FeatureCard
                 icon={Eye}
                 title="Live Feed"
                 description="A streaming ticker of every incoming signal, filterable by source, severity, and time window — your crisis radar in real time."
-                color="#298DFF"
+                color="var(--primary)"
               />
               <FeatureCard
                 icon={Bell}
                 title="Smart Alerting"
                 description="Threshold-based and ML-driven alerts delivered via Slack, PagerDuty, email, or webhooks — zero noise, only signal."
-                color="#FF4757"
+                color="var(--critical)"
               />
               <FeatureCard
                 icon={Globe}
                 title="Multi-Source Correlation"
                 description="Connects dots across channels — a spike on Twitter correlated with support tickets and reviews tells a richer story."
-                color="#298DFF"
+                color="var(--primary)"
               />
             </div>
           </div>
         </section>
 
         {/* ── How it works ── */}
-        <section id="how-it-works" className="border-b border-[#343940] bg-[#131518]/10 py-24">
+        <section
+          id="how-it-works"
+          className="border-b border-border bg-card/10 py-24 z-10 relative"
+        >
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-20 text-center tech-line pb-8 max-w-xl mx-auto">
-              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
+              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-primary">
                 [ LOGICAL WORKFLOW ]
               </p>
-              <h2 className="text-3xl font-extrabold tracking-tight uppercase text-white md:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-tight uppercase text-foreground md:text-4xl">
                 From signal to resolution
               </h2>
             </div>
@@ -692,19 +704,19 @@ function HomePage() {
               ].map(({ step, title, desc, icon: Icon }) => (
                 <div
                   key={step}
-                  className="relative flex flex-col items-start text-left border border-[#343940] bg-[#131518] p-6 group"
+                  className="relative flex flex-col items-start text-left border border-border bg-card p-6 group"
                 >
-                  <div className="absolute top-0 left-0 w-[2px] h-full bg-transparent group-hover:bg-[#298DFF] transition-all duration-300" />
-                  <div className="relative mb-6 flex h-12 w-12 items-center justify-center rounded-none border border-[#343940] bg-[#131518] text-[#298DFF]">
+                  <div className="absolute top-0 left-0 w-[2px] h-full bg-transparent group-hover:bg-primary transition-all duration-300" />
+                  <div className="relative mb-6 flex h-12 w-12 items-center justify-center rounded-none border border-border bg-card text-primary font-mono">
                     <Icon className="h-5 w-5" />
-                    <span className="absolute -top-2.5 -right-2.5 flex h-5 w-5 items-center justify-center rounded-none bg-[#343940] text-[9px] font-mono font-bold text-white border border-[#343940]">
+                    <span className="absolute -top-2.5 -right-2.5 flex h-5 w-5 items-center justify-center rounded-none bg-border text-[9px] font-mono font-bold text-foreground border border-border">
                       {step}
                     </span>
                   </div>
-                  <h3 className="mb-2 text-sm font-bold uppercase tracking-wider text-white">
+                  <h3 className="mb-2 text-sm font-bold uppercase tracking-wider text-foreground">
                     {title}
                   </h3>
-                  <p className="text-xs leading-relaxed text-[#6C7584]">{desc}</p>
+                  <p className="text-xs leading-relaxed text-muted-foreground">{desc}</p>
                 </div>
               ))}
             </div>
@@ -712,15 +724,17 @@ function HomePage() {
         </section>
 
         {/* ── Stats ── */}
-        <section id="stats" className="py-24 border-b border-[#343940]">
+        <section id="stats" className="py-24 border-b border-border z-10 relative">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
-              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
+              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-primary">
                 // SYSTEM PERFORMANCE METRICS
               </p>
-              <h2 className="text-3xl font-extrabold uppercase text-white">Numbers that speak</h2>
+              <h2 className="text-3xl font-extrabold uppercase text-foreground">
+                Numbers that speak
+              </h2>
             </div>
-            <div className="grid gap-px bg-[#343940] sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
               <StatCard value={99} suffix="%" label="Detection accuracy" />
               <StatCard value={28} suffix="s" label="Avg. time to alert" />
               <StatCard value={12000} suffix="+" label="Signals processed / min" />
@@ -730,13 +744,18 @@ function HomePage() {
         </section>
 
         {/* ── Testimonials ── */}
-        <section id="testimonials" className="border-b border-[#343940] bg-[#131518]/10 py-24">
+        <section
+          id="testimonials"
+          className="border-b border-border bg-card/10 py-24 z-10 relative"
+        >
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
-              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-[#298DFF]">
+              <p className="mb-2 text-[10px] font-mono uppercase tracking-widest text-primary">
                 // STAKEHOLDER FEEDBACK
               </p>
-              <h2 className="text-3xl font-extrabold uppercase text-white">Trusted by ops teams</h2>
+              <h2 className="text-3xl font-extrabold uppercase text-foreground">
+                Trusted by ops teams
+              </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <TestimonialCard
@@ -772,27 +791,27 @@ function HomePage() {
         </section>
 
         {/* ── CTA Banner ── */}
-        <section className="py-24">
+        <section className="py-24 z-10 relative">
           <div className="mx-auto max-w-4xl px-6 text-center">
-            <div className="rounded-none border border-[#343940] bg-[#131518] p-12 relative overflow-hidden">
+            <div className="rounded-none border border-border bg-card p-12 relative overflow-hidden">
               {/* Corner industrial notches */}
-              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#298DFF]" />
-              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#298DFF]" />
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary" />
 
-              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-none bg-[#298DFF]/10 border border-[#298DFF]/30">
-                <Radar className="h-6 w-6 text-[#298DFF]" />
+              <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-none bg-primary/10 border border-primary/30">
+                <Radar className="h-6 w-6 text-primary" />
               </div>
-              <h2 className="mb-4 text-3xl font-extrabold uppercase tracking-tight text-white">
+              <h2 className="mb-4 text-3xl font-extrabold uppercase tracking-tight text-foreground">
                 Ready to stay ahead of every crisis?
               </h2>
-              <p className="mb-8 text-xs text-[#6C7584] max-w-lg mx-auto">
+              <p className="mb-8 text-xs text-muted-foreground max-w-lg mx-auto">
                 Open the live dashboard now and see Sentinel AI in action — real incidents, real
                 data, real time.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
                   to="/sources"
-                  className="inline-flex items-center gap-2 rounded-none bg-[#298DFF] px-8 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-[#298DFF]/90 shadow-[0_4px_20px_rgba(41,141,255,0.2)]"
+                  className="inline-flex items-center gap-2 rounded-none bg-primary px-8 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90 shadow-[0_4px_20px_rgba(41,141,255,0.2)]"
                 >
                   <Plug className="h-4 w-4" />
                   Set Up Now
@@ -800,7 +819,7 @@ function HomePage() {
                 </Link>
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center gap-2 rounded-none border border-[#343940] bg-black/45 px-8 py-4 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-black/60"
+                  className="inline-flex items-center gap-2 rounded-none border border-border bg-background px-8 py-4 text-xs font-bold font-mono uppercase tracking-wider text-foreground transition-colors hover:bg-background/60"
                 >
                   <Radar className="h-4 w-4" />
                   Launch Dashboard

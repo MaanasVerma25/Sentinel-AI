@@ -47,7 +47,7 @@ function OnboardingPage() {
       navigate({ to: "/setup" });
     } else if (user) {
       setCompanyName(user.user_metadata?.company || "");
-      
+
       const loadOnboardingProfile = async () => {
         try {
           const { data, error } = await supabase
@@ -116,20 +116,18 @@ function OnboardingPage() {
       }
 
       // 3. Upsert full onboarding data to onboarding_profiles table (visible in Table Editor)
-      const { error: onboardingError } = await supabase
-        .from("onboarding_profiles")
-        .upsert({
-          user_id: user.id,
-          company_name: companyName,
-          website,
-          industry,
-          company_size: companySize,
-          description,
-          twitter_handle: twitter,
-          linkedin_url: linkedin,
-          facebook_url: facebook,
-          instagram_handle: instagram,
-        });
+      const { error: onboardingError } = await supabase.from("onboarding_profiles").upsert({
+        user_id: user.id,
+        company_name: companyName,
+        website,
+        industry,
+        company_size: companySize,
+        description,
+        twitter_handle: twitter,
+        linkedin_url: linkedin,
+        facebook_url: facebook,
+        instagram_handle: instagram,
+      });
 
       if (onboardingError) {
         console.error("Failed to save onboarding profile:", onboardingError);
@@ -220,9 +218,7 @@ function OnboardingPage() {
               Sentinel <span className="text-[#298DFF]">AI</span>
             </span>
           </Link>
-          <div className="text-[10px] font-mono text-[#6C7584]">
-            SECURE.SSL // ONBOARDING_STAGE
-          </div>
+          <div className="text-[10px] font-mono text-[#6C7584]">SECURE.SSL // ONBOARDING_STAGE</div>
         </div>
       </nav>
 
@@ -239,7 +235,8 @@ function OnboardingPage() {
             Company & Signal Sources
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-xs leading-relaxed text-[#6C7584]">
-            Tell us about your organization and links. This calibrates the crisis detection algorithms to identify sentiment anomalies in your specific industry.
+            Tell us about your organization and links. This calibrates the crisis detection
+            algorithms to identify sentiment anomalies in your specific industry.
           </p>
         </div>
 
@@ -342,7 +339,9 @@ function OnboardingPage() {
                   <Twitter className="h-3.5 w-3.5 text-[#FF6C3D]" /> Twitter / X Handle
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[#6C7584]">@</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[#6C7584]">
+                    @
+                  </span>
                   <input
                     type="text"
                     value={twitter}
@@ -384,7 +383,9 @@ function OnboardingPage() {
                   <Instagram className="h-3.5 w-3.5 text-[#FF6C3D]" /> Instagram Handle
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[#6C7584]">@</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[#6C7584]">
+                    @
+                  </span>
                   <input
                     type="text"
                     value={instagram}

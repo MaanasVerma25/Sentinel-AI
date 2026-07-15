@@ -16,9 +16,7 @@ export async function searchNews(query: string): Promise<Mention[]> {
       // Extract publisher source from the end of the title (e.g., "Story Title - TechCrunch")
       const sourceMatch = title.match(/ - ([^-]+)$/);
       const author = sourceMatch ? sourceMatch[1].trim() : "Google News";
-      const cleanTitle = sourceMatch
-        ? title.substring(0, title.lastIndexOf(" - ")).trim()
-        : title;
+      const cleanTitle = sourceMatch ? title.substring(0, title.lastIndexOf(" - ")).trim() : title;
 
       return {
         source: "news" as const,
@@ -28,9 +26,7 @@ export async function searchNews(query: string): Promise<Mention[]> {
         url: item.link || "",
         subreddit: null,
         score: null,
-        created_at: item.pubDate
-          ? new Date(item.pubDate).toISOString()
-          : new Date().toISOString(),
+        created_at: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
       };
     });
   } catch (error) {

@@ -5,7 +5,7 @@ export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve
 export async function searchReddit(
   keyword: string,
   limit = 25,
-  type: "posts" | "comments" | "all" = "all"
+  type: "posts" | "comments" | "all" = "all",
 ): Promise<Mention[]> {
   const userAgent = "brand-monitor-agent/0.1";
   const encodedKeyword = encodeURIComponent(keyword);
@@ -43,7 +43,7 @@ export async function searchReddit(
             author: data.author || "[deleted]",
             title: data.title || "Reddit Post",
             text: data.selftext || data.title || "",
-            url: data.permalink ? `https://www.reddit.com${data.permalink}` : (data.url || ""),
+            url: data.permalink ? `https://www.reddit.com${data.permalink}` : data.url || "",
             subreddit: data.subreddit || null,
             score: typeof data.score === "number" ? data.score : null,
             created_at: data.created_utc
@@ -55,7 +55,7 @@ export async function searchReddit(
     } catch (error) {
       console.error(
         `Error searching Reddit for keyword "${keyword}" (isComment: ${isComment}):`,
-        error
+        error,
       );
       return [];
     }

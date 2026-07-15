@@ -39,7 +39,7 @@ export async function ingestForCompany(companyId: string): Promise<IngestSummary
     } catch (err) {
       console.error(
         `Failed to ingest Reddit mentions for company ${companyId} and keyword "${keyword}":`,
-        err
+        err,
       );
     }
 
@@ -59,7 +59,7 @@ export async function ingestForCompany(companyId: string): Promise<IngestSummary
     } catch (err) {
       console.error(
         `Failed to ingest News mentions for company ${companyId} and keyword "${keyword}":`,
-        err
+        err,
       );
     }
 
@@ -75,7 +75,7 @@ export async function ingestForCompany(companyId: string): Promise<IngestSummary
   if (hashQueryError) {
     console.error(
       `Error checking existing mentions in database for company ${companyId}:`,
-      hashQueryError
+      hashQueryError,
     );
   }
 
@@ -85,7 +85,7 @@ export async function ingestForCompany(companyId: string): Promise<IngestSummary
   const newMentions = allMentions.filter((m) => !existingHashes.has(m.text_hash));
 
   // Deduplicate within the newly fetched batch itself
-  const uniqueBatchMentionsMap = new Map<string, typeof newMentions[number]>();
+  const uniqueBatchMentionsMap = new Map<string, (typeof newMentions)[number]>();
   for (const m of newMentions) {
     if (!uniqueBatchMentionsMap.has(m.text_hash)) {
       uniqueBatchMentionsMap.set(m.text_hash, m);
@@ -98,9 +98,7 @@ export async function ingestForCompany(companyId: string): Promise<IngestSummary
 
   // e. Bulk insert new mentions into the mentions table
   if (finalMentionsToInsert.length > 0) {
-    const { error: insertError } = await supabase
-      .from("mentions")
-      .insert(finalMentionsToInsert);
+    const { error: insertError } = await supabase.from("mentions").insert(finalMentionsToInsert);
 
     if (insertError) {
       throw new Error(`Failed to bulk insert mentions: ${insertError.message}`);

@@ -11,11 +11,14 @@ import {
   ArrowLeft,
   Menu,
   Loader2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { clusters, type CrisisCluster } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import { NotificationsPanel } from "@/components/notifications-panel";
 import { IncidentDetailDialog } from "@/components/incident-detail";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -129,12 +132,18 @@ function AppLayout() {
           <Outlet />
         </main>
       </div>
-      <IncidentDetailDialog open={detailOpen} onOpenChange={setDetailOpen} cluster={selectedCluster} />
+      <IncidentDetailDialog
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        cluster={selectedCluster}
+      />
     </div>
   );
 }
 
-function getInitials(user: { user_metadata?: { full_name?: string }; email?: string } | null): string {
+function getInitials(
+  user: { user_metadata?: { full_name?: string }; email?: string } | null,
+): string {
   if (!user) return "?";
   const name = user.user_metadata?.full_name;
   if (name) {
@@ -156,6 +165,7 @@ function TopBar({
   user: { user_metadata?: { full_name?: string }; email?: string } | null;
   onSelectIncident?: (cluster: CrisisCluster) => void;
 }) {
+  const { theme, setTheme } = useTheme();
   const [tick, setTick] = useState(0);
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -258,10 +268,19 @@ function TopBar({
           <ArrowLeft className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Back to Home</span>
         </Link>
-        <NotificationsPanel
-          activeCount={activeCount}
-          onSelectIncident={onSelectIncident}
-        />
+        <button
+          type="button"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary/40 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+          title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+        >
+          {theme === "dark" ? (
+            <Sun className="h-4 w-4 text-[var(--warning)]" />
+          ) : (
+            <Moon className="h-4 w-4 text-[var(--cyan)]" />
+          )}
+        </button>
+        <NotificationsPanel activeCount={activeCount} onSelectIncident={onSelectIncident} />
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[var(--cyan)] to-blue-700 text-[10px] font-bold text-background sm:h-9 sm:w-9 sm:text-xs">
           {getInitials(user)}
         </div>
