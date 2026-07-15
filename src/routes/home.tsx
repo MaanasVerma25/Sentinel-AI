@@ -394,6 +394,7 @@ function HomePage() {
                   </Link>
                   <Link
                     to="/dashboard"
+                    search={{ demo: true }}
                     className="inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90"
                   >
                     Dashboard <ArrowRight className="h-3.5 w-3.5" />
@@ -493,6 +494,7 @@ function HomePage() {
                   </Link>
                   <Link
                     to="/dashboard"
+                    search={{ demo: true }}
                     className="inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider text-white transition-colors hover:bg-primary/90"
                   >
                     Dashboard <ArrowRight className="h-3.5 w-3.5" />
@@ -564,6 +566,7 @@ function HomePage() {
             </Link>
             <Link
               to="/dashboard"
+              search={user ? undefined : { demo: true }}
               className="inline-flex items-center gap-2 rounded-none border border-border bg-card px-8 py-3.5 text-xs font-bold font-mono uppercase tracking-wider text-foreground transition-colors hover:bg-card/70 w-full sm:w-auto justify-center"
             >
               <Radar className="h-4 w-4" /> Open Command Center

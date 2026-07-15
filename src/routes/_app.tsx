@@ -1,4 +1,4 @@
-import { Link, Outlet, useRouterState, useNavigate, createFileRoute } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState, useNavigate, createFileRoute, useSearch } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Radio,
@@ -25,6 +25,9 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
+  validateSearch: (search: Record<string, unknown>) => ({
+    demo: search.demo === "true" || search.demo === true,
+  }),
 });
 
 const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
@@ -42,6 +45,8 @@ function AppLayout() {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { demo: isDemo } = useSearch({ from: "/_app" });
+  const [demoBannerDismissed, setDemoBannerDismissed] = useState(false);
   const activeIncidents = clusters.filter((c) => c.severity === "critical").length;
   const status = activeIncidents > 0 ? "critical" : "ok";
 
@@ -54,12 +59,12 @@ function AppLayout() {
     setDetailOpen(true);
   };
 
-  // Auth guard: redirect to /setup if not authenticated
+  // Auth guard: redirect to /setup if not authenticated AND not in demo mode
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !isDemo) {
       navigate({ to: "/setup" });
     }
-  }, [loading, user, navigate]);
+  }, [loading, user, isDemo, navigate]);
 
   // Show loading spinner while checking auth
   if (loading) {
@@ -75,11 +80,39 @@ function AppLayout() {
     );
   }
 
-  // Don't render the app until authenticated
-  if (!user) return null;
+  // Don't render the app until authenticated (unless demo mode)
+  if (!user && !isDemo) return null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Demo Mode Banner */}
+      {isDemo && !demoBannerDismissed && (
+        <div className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-[var(--warning)]/40 bg-[color-mix(in_oklab,var(--warning)_8%,var(--background))] px-4 py-2 text-xs font-mono">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--warning)] opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--warning)]" />
+            </span>
+            <span className="text-[var(--warning)] font-bold uppercase tracking-wider">SIMULATION MODE</span>
+            <span className="text-muted-foreground">— You're viewing a live demo with mock data. No real data is connected.</span>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              to="/setup"
+              className="rounded-none border border-[var(--warning)]/50 bg-[var(--warning)]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--warning)] hover:bg-[var(--warning)]/20 transition-colors"
+            >
+              Sign Up Free →
+            </Link>
+            <button
+              onClick={() => setDemoBannerDismissed(true)}
+              className="text-muted-foreground hover:text-foreground transition-colors text-base leading-none"
+              title="Dismiss"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
       <TopBar
         status={status}
         activeCount={activeIncidents}
