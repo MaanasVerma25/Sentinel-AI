@@ -1,9 +1,46 @@
 import { CrisisCluster, Severity, Category, SourceKind } from "./mock-data";
 
+function classifyMention(m: any) {
+  const text = ((m.title || "") + " " + (m.text || "")).toLowerCase();
+  
+  let category = m.category;
+  if (!category) {
+    if (/\b(outage|down|offline|gateway|502|503|504|unresponsive|accessible|crash|resolved)\b/.test(text)) {
+      category = "Outage";
+    } else if (/\b(stripe|payment|billing|invoice|checkout|card|charge|refund|subscription|purchase|buy)\b/.test(text)) {
+      category = "Payment";
+    } else if (/\b(bug|error|glitch|broken|fail|incorrect|wrong|nan|exception)\b/.test(text)) {
+      category = "Bug";
+    } else if (/\b(fraud|scam|hack|phishing|stolen|security|leak|compromised|fake)\b/.test(text)) {
+      category = "Fraud";
+    } else {
+      category = "PR";
+    }
+  }
+
+  let sentiment = m.sentiment;
+  if (!sentiment) {
+    if (/\b(outage|down|crash|hack|compromised|critical|fatal|severe|unusable|alert|emergency)\b/.test(text)) {
+      sentiment = "critical";
+    } else if (/\b(error|broken|fail|issue|problem|bad|slow|bug|glitch|regression|prevent|cannot|unable)\b/.test(text)) {
+      sentiment = "negative";
+    } else if (/\b(resolved|fixed|good|great|awesome|love|happy|thanks)\b/.test(text)) {
+      sentiment = "positive";
+    } else {
+      sentiment = "neutral";
+    }
+  }
+
+  return { ...m, category, sentiment };
+}
+
 export function generateRealClusters(mentions: any[], companyName: string): CrisisCluster[] {
+  // First, classify/clean all mentions to ensure category and sentiment are populated
+  const processedMentions = mentions.map(classifyMention);
+
   // Group mentions by category
   const categoriesMap: Record<string, any[]> = {};
-  for (const m of mentions) {
+  for (const m of processedMentions) {
     const cat = m.category || "General";
     if (!categoriesMap[cat]) {
       categoriesMap[cat] = [];
@@ -81,7 +118,8 @@ export function generateRealClusters(mentions: any[], companyName: string): Cris
         `Triage active ${cat.toLowerCase()} pipelines`,
         "Verify callback routing and error responses",
         "Engage engineering on-call groups"
-      ]
+      ],
+      rawMentions: items
     });
   }
 

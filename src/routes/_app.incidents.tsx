@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import { clusters, type CrisisCluster, type Severity, type Category } from "@/lib/mock-data";
 import { CrisisClusterCard } from "@/components/crisis-cluster-card";
 import { IncidentDetailDialog } from "@/components/incident-detail";
-import { Search, X, ArrowUpDown, Loader2 } from "lucide-react";
+import { Search, X, ArrowUpDown, Loader2, AlertOctagon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
@@ -121,11 +121,11 @@ function IncidentsPage() {
 
   // Get source dataset based on auth / demo state
   const dataset = useMemo(() => {
-    if (!isDemo && isOnboarded) {
+    if (user && !isDemo) {
       return company ? generateRealClusters(mentions, company.name) : [];
     }
     return clusters;
-  }, [isDemo, isOnboarded, company, mentions]);
+  }, [isDemo, user, company, mentions]);
 
   const [selected, setSelected] = useState<CrisisCluster | null>(null);
   const [open, setOpen] = useState(false);
@@ -209,7 +209,7 @@ function IncidentsPage() {
     { sev: "watching" as const, label: "Watching" },
   ];
 
-  if (!isDemo && isOnboarded && (loadingDb || authLoading)) {
+  if (user && !isDemo && (loadingDb || authLoading)) {
     return (
       <div className="flex h-[80vh] items-center justify-center bg-black">
         <div className="flex flex-col items-center gap-4">
@@ -338,7 +338,15 @@ function IncidentsPage() {
       </div>
 
       {/* Grouped results */}
-      {filteredClusters.length === 0 ? (
+      {dataset.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-card/40 py-16 text-center px-4">
+          <AlertOctagon className="h-10 w-10 text-muted-foreground/40 mb-3" />
+          <p className="text-sm font-semibold text-white">No active incidents detected</p>
+          <p className="mt-2 text-xs text-muted-foreground max-w-sm leading-relaxed">
+            We haven't detected any critical signals or anomalies yet. Make sure you have completed onboarding and configured keywords.
+          </p>
+        </div>
+      ) : filteredClusters.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card py-16 text-center">
           <Search className="h-10 w-10 text-muted-foreground/30 mb-3" />
           <p className="text-sm font-medium text-muted-foreground">
