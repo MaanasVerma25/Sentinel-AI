@@ -311,6 +311,23 @@ function Dashboard() {
     );
   }
 
+  if (isOnboarded && !company) {
+    return (
+      <div className="flex h-[80vh] flex-col items-center justify-center bg-black text-center p-6">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-none bg-[var(--warning)]/15 border border-[var(--warning)]/30 text-[var(--warning)] mb-4">
+          <AlertCircle className="h-6 w-6" />
+        </div>
+        <h1 className="text-xl font-bold uppercase tracking-wider font-mono text-white">Company Profile Not Found</h1>
+        <p className="mt-2 text-sm text-muted-foreground max-w-md">
+          Onboarding profile was completed for <span className="font-semibold text-white">"{onboardingProfile?.company_name}"</span>, but the corresponding company registry record could not be retrieved.
+        </p>
+        <p className="text-xs text-muted-foreground/60 mt-4 max-w-sm">
+          Please check your settings or re-run setup to establish the database mappings.
+        </p>
+      </div>
+    );
+  }
+
   // --- Real-time Onboarded UI Layout ---
   if (isOnboarded && company) {
     const realActiveIncidents = mentions.filter(

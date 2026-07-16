@@ -121,8 +121,8 @@ function IncidentsPage() {
 
   // Get source dataset based on auth / demo state
   const dataset = useMemo(() => {
-    if (!isDemo && isOnboarded && company) {
-      return generateRealClusters(mentions, company.name);
+    if (!isDemo && isOnboarded) {
+      return company ? generateRealClusters(mentions, company.name) : [];
     }
     return clusters;
   }, [isDemo, isOnboarded, company, mentions]);
@@ -333,7 +333,7 @@ function IncidentsPage() {
         <span className="tabular-nums font-medium text-foreground">{filteredClusters.length}</span>
         <span>incident{filteredClusters.length === 1 ? "" : "s"} found</span>
         {hasActiveFilters && (
-          <span className="text-muted-foreground/60">(filtered from {clusters.length} total)</span>
+          <span className="text-muted-foreground/60">(filtered from {dataset.length} total)</span>
         )}
       </div>
 

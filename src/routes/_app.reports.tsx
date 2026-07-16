@@ -168,20 +168,30 @@ function ReportsPage() {
     };
   }, [user, authLoading]);
 
-  // Load custom reports from LocalStorage on mount
+  // Load custom reports from LocalStorage after checking onboarding status
   useEffect(() => {
+    if (authLoading || loadingDb) return;
+
     const cached = localStorage.getItem("sentinel_reports");
+    let loadedReports: Report[] = [];
     if (cached) {
       try {
-        setReportsList(JSON.parse(cached));
+        loadedReports = JSON.parse(cached);
       } catch {
-        setReportsList(initialReports);
+        loadedReports = isOnboarded ? [] : initialReports;
       }
     } else {
-      setReportsList(initialReports);
-      localStorage.setItem("sentinel_reports", JSON.stringify(initialReports));
+      loadedReports = isOnboarded ? [] : initialReports;
     }
-  }, []);
+
+    if (isOnboarded) {
+      // Filter out any simulated reports for onboarded users
+      loadedReports = loadedReports.filter((r) => r.dataSource !== "simulated");
+    }
+
+    setReportsList(loadedReports);
+    localStorage.setItem("sentinel_reports", JSON.stringify(loadedReports));
+  }, [authLoading, loadingDb, isOnboarded]);
 
   const handleGenerateReport = async () => {
     setGenerating(true);
