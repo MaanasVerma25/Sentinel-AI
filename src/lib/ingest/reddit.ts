@@ -7,7 +7,7 @@ export async function searchReddit(
   limit = 25,
   type: "posts" | "comments" | "all" = "all",
 ): Promise<Mention[]> {
-  const userAgent = "brand-monitor-agent/0.1";
+  const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
   const encodedKeyword = encodeURIComponent(keyword);
   const headers = { "User-Agent": userAgent };
   const mentions: Mention[] = [];

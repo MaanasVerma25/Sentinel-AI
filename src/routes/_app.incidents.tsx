@@ -66,7 +66,7 @@ function IncidentsPage() {
           const { data: companyData } = await supabase
             .from("companies")
             .select("*")
-            .eq("name", profile.company_name)
+            .ilike("name", profile.company_name.trim())
             .maybeSingle();
 
           if (companyData && isMounted) {
@@ -121,11 +121,14 @@ function IncidentsPage() {
 
   // Get source dataset based on auth / demo state
   const dataset = useMemo(() => {
-    if (user && !isDemo) {
-      return company ? generateRealClusters(mentions, company.name) : [];
+    if (isDemo) {
+      return clusters;
     }
-    return clusters;
-  }, [isDemo, user, company, mentions]);
+    if (user && isOnboarded && company) {
+      return generateRealClusters(mentions, company.name);
+    }
+    return [];
+  }, [isDemo, user, isOnboarded, company, mentions]);
 
   const [selected, setSelected] = useState<CrisisCluster | null>(null);
   const [open, setOpen] = useState(false);

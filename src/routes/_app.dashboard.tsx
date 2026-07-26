@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
 import {
   AlertTriangle,
@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { clusters, type CrisisCluster } from "@/lib/mock-data";
+import { generateRealClusters } from "@/lib/clustering";
 import { CountUp } from "@/components/count-up";
 import { AnomalyTimeline } from "@/components/anomaly-timeline";
 import { CrisisClusterCard } from "@/components/crisis-cluster-card";
@@ -106,6 +107,7 @@ function StatCard({
 }
 
 function Dashboard() {
+  const { demo: isDemo } = useSearch({ from: "/_app" });
   const [selected, setSelected] = useState<CrisisCluster | null>(null);
   const [open, setOpen] = useState(false);
   const [showSimulationModal, setShowSimulationModal] = useState(false);
@@ -159,7 +161,7 @@ function Dashboard() {
           const { data: companyData, error: compErr } = await supabase
             .from("companies")
             .select("*")
-            .eq("name", profile.company_name)
+            .ilike("name", profile.company_name.trim())
             .maybeSingle();
 
           if (compErr) {
@@ -265,7 +267,20 @@ function Dashboard() {
     setOpen(true);
   };
 
-  const activeIncidents = clusters.filter((c) => c.severity === "critical").length;
+  // Real cluster dataset for dashboard
+  const realClusters = useMemo(() => {
+    if (user && !isDemo && isOnboarded && company) {
+      return generateRealClusters(mentions, company.name);
+    }
+    if (isDemo) {
+      return clusters;
+    }
+    return [];
+  }, [user, isDemo, isOnboarded, company, mentions]);
+
+  const activeIncidents = useMemo(() => {
+    return realClusters.filter((c) => c.severity === "critical").length;
+  }, [realClusters]);
 
   // Real-time Chart Data (mentions by source over the last 7 days)
   const chartData = useMemo(() => {
@@ -787,11 +802,21 @@ function Dashboard() {
                 AI-clustered anomalies that require triage.
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {clusters.map((c) => (
-                <CrisisClusterCard key={c.id} cluster={c} onView={() => handleView(c)} />
-              ))}
-            </div>
+            {realClusters.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-card/40 py-10 text-center px-4">
+                <AlertCircle className="h-8 w-8 text-muted-foreground/40 mb-2" />
+                <p className="text-xs font-semibold text-white">No active incidents detected</p>
+                <p className="mt-1 text-[11px] text-muted-foreground max-w-xs">
+                  Run a scan to pull real brand mentions and detect crisis clusters.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {realClusters.map((c) => (
+                  <CrisisClusterCard key={c.id} cluster={c} onView={() => handleView(c)} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

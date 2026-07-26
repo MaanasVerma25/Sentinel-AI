@@ -51,9 +51,7 @@ export function generateRealClusters(mentions: any[], companyName: string): Cris
   const generated: CrisisCluster[] = [];
 
   for (const [cat, items] of Object.entries(categoriesMap)) {
-    // Filter critical/negative mentions
-    const criticalItems = items.filter(i => i.sentiment === "critical" || i.sentiment === "negative");
-    if (criticalItems.length === 0) continue;
+    if (items.length === 0) continue;
 
     const sourceSet = new Set<SourceKind>(
       items.map(i => {
@@ -65,39 +63,40 @@ export function generateRealClusters(mentions: any[], companyName: string): Cris
     );
     
     // Sort items by created_at to get the latest detection time
-    const sorted = [...criticalItems].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    const sorted = [...items].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     const latest = sorted[0];
 
     // Determine severity
-    const hasCritical = criticalItems.some(i => i.sentiment === "critical");
-    const severity: Severity = hasCritical ? "critical" : "warning";
+    const hasCritical = items.some(i => i.sentiment === "critical");
+    const hasNegative = items.some(i => i.sentiment === "negative");
+    const severity: Severity = hasCritical ? "critical" : hasNegative ? "warning" : "watching";
 
     // Dynamic titles
-    let title = `${cat} Irregularity Detected`;
+    let title = `${companyName || "Brand"} ${cat} Signals`;
     if (cat === "Payment") {
-      title = "Payment Failure Spike";
+      title = `Payment & Billing Telemetry (${companyName || "Brand"})`;
     } else if (cat === "Bug") {
-      title = "Elevated Application Bug Reports";
+      title = `Application & Product Bug Reports (${companyName || "Brand"})`;
     } else if (cat === "Outage") {
-      title = "Network Gateway Outage";
+      title = `Network & Gateway Outage Signals (${companyName || "Brand"})`;
     } else if (cat === "PR") {
-      title = "Adverse Social Sentiment Trend";
+      title = `Public Sentiment & Media Activity (${companyName || "Brand"})`;
     } else if (cat === "Fraud") {
-      title = "Coordinated Fraud Attempts";
+      title = `Security & Fraud Telemetry (${companyName || "Brand"})`;
     }
 
     const summary = latest.summary || latest.text.slice(0, 160) + "...";
     
     // Sparkline history matches the volume
     const spark = Array.from({ length: 10 }).map((_, idx) => {
-      return Math.round(5 + (idx * idx * criticalItems.length) / 10);
+      return Math.round(2 + (idx * idx * items.length) / 10);
     });
 
     // Root causes
     const rootCauses = [
-      latest.title || "User reports spiking",
-      `Observed ${criticalItems.length} anomaly vectors over telemetry channels.`,
-      "System logs flag potential edge routing or DB latency."
+      latest.title || "Brand mention detected",
+      `Observed ${items.length} telemetry signals over public channels.`,
+      `Latest signal captured: "${(latest.title || latest.text).slice(0, 80)}..."`
     ];
 
     generated.push({

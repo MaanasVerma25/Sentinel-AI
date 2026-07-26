@@ -72,7 +72,7 @@ function AppLayout() {
           const { data: companyData } = await supabase
             .from("companies")
             .select("*")
-            .eq("name", profile.company_name)
+            .ilike("name", profile.company_name.trim())
             .maybeSingle();
 
           if (companyData && isMounted) {
@@ -125,11 +125,14 @@ function AppLayout() {
 
   // Calculate dynamic clusters and metrics
   const customClusters = useMemo(() => {
-    if (!isDemo && isOnboarded && company) {
+    if (isDemo) {
+      return clusters;
+    }
+    if (user && isOnboarded && company) {
       return generateRealClusters(mentions, company.name);
     }
-    return clusters;
-  }, [isDemo, isOnboarded, company, mentions]);
+    return [];
+  }, [isDemo, user, isOnboarded, company, mentions]);
 
   const activeIncidents = useMemo(() => {
     return customClusters.filter((c) => c.severity === "critical").length;

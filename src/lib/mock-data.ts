@@ -17,6 +17,7 @@ export interface CrisisCluster {
   rootCauses: string[];
   affectedUsers: string;
   fixes: string[];
+  rawMentions?: any[];
 }
 
 export const clusters: CrisisCluster[] = [

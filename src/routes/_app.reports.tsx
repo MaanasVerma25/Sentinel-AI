@@ -138,7 +138,7 @@ function ReportsPage() {
           const { data: companyData } = await supabase
             .from("companies")
             .select("*")
-            .eq("name", profile.company_name)
+            .ilike("name", profile.company_name.trim())
             .maybeSingle();
 
           if (companyData && isMounted) {
