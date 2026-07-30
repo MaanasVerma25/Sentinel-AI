@@ -123,12 +123,12 @@ function Dashboard() {
   const [scanStats, setScanStats] = useState<any>(null);
 
   useEffect(() => {
-    // If user is not onboarded, we check if they've acknowledged the simulation modal
+    // Only trigger simulation modal after loading is finished and user is confirmed NOT onboarded
     const hasSeen = sessionStorage.getItem("hasSeenSimulationModal");
-    if (!hasSeen && !isOnboarded && !authLoading) {
+    if (!hasSeen && !isOnboarded && !authLoading && !loadingRealData && !isDemo) {
       setShowSimulationModal(true);
     }
-  }, [isOnboarded, authLoading]);
+  }, [isOnboarded, authLoading, loadingRealData, isDemo]);
 
   useEffect(() => {
     if (authLoading || !user) return;
@@ -313,7 +313,7 @@ function Dashboard() {
     return Object.values(days);
   }, [mentions]);
 
-  if (isOnboarded && (loadingRealData || authLoading)) {
+  if (!isDemo && (loadingRealData || authLoading)) {
     return (
       <div className="flex h-[80vh] items-center justify-center bg-black">
         <div className="flex flex-col items-center gap-4">

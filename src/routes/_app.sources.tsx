@@ -146,7 +146,7 @@ function SourcesPage() {
     setState(activeSourcesList);
   }, [activeSourcesList]);
 
-  if (!isDemo && isOnboarded && (loadingDb || authLoading)) {
+  if (!isDemo && (loadingDb || authLoading)) {
     return (
       <div className="flex h-[80vh] items-center justify-center bg-black">
         <div className="flex flex-col items-center gap-4">

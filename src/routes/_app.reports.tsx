@@ -406,6 +406,19 @@ Format your output in clean Markdown. Add a clear, professional, short title on 
     });
   };
 
+  if (!isDemo && (loadingDb || authLoading)) {
+    return (
+      <div className="flex h-[80vh] items-center justify-center bg-black">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-[#298DFF]" />
+          <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            Synchronizing report compiler...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}

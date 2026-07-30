@@ -37,6 +37,7 @@ export function LiveSignalFeed({ maxItems = 16, isDemo = false }: { maxItems?: n
 
   // Real database states
   const [isOnboarded, setIsOnboarded] = useState(false);
+  const [loadingDb, setLoadingDb] = useState(true);
   const [company, setCompany] = useState<any>(null);
   const [items, setItems] = useState<FeedItem[]>([]);
   const idxRef = useRef(seedFeed.length);
@@ -89,6 +90,8 @@ export function LiveSignalFeed({ maxItems = 16, isDemo = false }: { maxItems?: n
         }
       } catch (err) {
         console.error("Error loading live feed database:", err);
+      } finally {
+        if (isMounted) setLoadingDb(false);
       }
     }
 
@@ -134,7 +137,7 @@ export function LiveSignalFeed({ maxItems = 16, isDemo = false }: { maxItems?: n
 
   // Fallback simulated interval feed for guests / demo mode
   useEffect(() => {
-    if (!isDemo && isOnboarded) return; // Disable simulation for onboarded users
+    if (!isDemo && (isOnboarded || loadingDb || authLoading)) return; // Disable simulation for onboarded users or while loading
 
     // Initialize mock feed
     setItems(
