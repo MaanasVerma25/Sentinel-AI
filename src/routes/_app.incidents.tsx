@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { generateRealClusters } from "@/lib/clustering";
 import { useSearch } from "@tanstack/react-router";
+import { ingestForCompanyFn } from "@/lib/ingest/server-fn";
 
 export const Route = createFileRoute("/_app/incidents")({
   component: IncidentsPage,
@@ -79,6 +80,25 @@ function IncidentsPage() {
 
             if (mentionsData && isMounted) {
               setMentions(mentionsData);
+
+              // Auto-scan if no mentions land yet
+              if (mentionsData.length === 0) {
+                try {
+                  await ingestForCompanyFn({
+                    data: { companyId: companyData.id },
+                  });
+                  const { data: freshMentions } = await supabase
+                    .from("mentions")
+                    .select("*")
+                    .eq("company_id", companyData.id)
+                    .order("created_at", { ascending: false });
+                  if (freshMentions && isMounted) {
+                    setMentions(freshMentions);
+                  }
+                } catch (scanErr) {
+                  console.error("Auto scan in incidents failed:", scanErr);
+                }
+              }
             }
           }
         }
@@ -125,9 +145,13 @@ function IncidentsPage() {
       return clusters;
     }
     if (user && isOnboarded && company) {
-      return generateRealClusters(mentions, company.name);
+      const real = generateRealClusters(mentions, company.name);
+      if (real.length > 0) {
+        return real;
+      }
+      return clusters;
     }
-    return [];
+    return clusters;
   }, [isDemo, user, isOnboarded, company, mentions]);
 
   const [selected, setSelected] = useState<CrisisCluster | null>(null);
