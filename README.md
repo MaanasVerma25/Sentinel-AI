@@ -8,7 +8,7 @@
 
 ##  Key Features
 
-### 📡 Multi-Source Signal Ingestion Pipeline
+###  Multi-Source Signal Ingestion Pipeline
 - **Reddit API Integration**: Real-time monitoring of corporate mentions, subreddit discussions, and user feedback.
 - **News RSS Ingestion**: Live Google News RSS parser scanning public news outlets for brand telemetry.
 - **Deduplication Engine**: Hashes incoming text content (`text_hash`) and deduplicates signals against [Supabase](https://supabase.com/) storage to ensure clean metric calculations.
