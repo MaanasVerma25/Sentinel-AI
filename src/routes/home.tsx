@@ -511,13 +511,7 @@ function HomePage() {
           <div className="w-full max-w-7xl px-6 mb-8 z-10">
             <SplineSceneBasic />
           </div>
-          {/* Tech dot element for engineering vibe */}
-          <div className="absolute top-24 left-10 text-[9px] font-mono text-muted-foreground/60 hidden lg:block">
-            SYS.LOC: //US-WEST.SENTINEL
-          </div>
-          <div className="absolute top-24 right-10 text-[9px] font-mono text-muted-foreground/60 hidden lg:block">
-            STATUS: ACTIVE // SCANNING
-          </div>
+
 
           {/* live alert ticker */}
           <div className="animate-fade-up mb-8 flex items-center gap-3 rounded-none border border-border bg-card px-4 py-2 z-10">

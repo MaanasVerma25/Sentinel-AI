@@ -11,10 +11,7 @@ export function SplineSceneBasic() {
       <div className="flex flex-col md:flex-row h-full">
         {/* Left content */}
         <div className="flex-1 p-8 md:p-12 relative z-10 flex flex-col justify-center">
-          <div className="text-[10px] font-mono text-[#298DFF] mb-3 uppercase tracking-widest flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#2ED573] animate-pulse" />[ SYSTEM COMMAND
-            CENTER ]
-          </div>
+
           <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-white to-[#298DFF] uppercase tracking-tight">
             Sentinel AI
           </h1>
@@ -22,14 +19,7 @@ export function SplineSceneBasic() {
             Autonomous threat detection & live incident streaming. Ingesting signals across all
             support channels, reviews, social media, and mail in real time.
           </p>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-[#343940]/60 pt-4 text-[10px] font-mono text-[#6C7584]">
-            <div>
-              SYS.LOC: <span className="text-white">//HQ-MONITOR</span>
-            </div>
-            <div>
-              STATUS: <span className="text-[#2ED573]">ACTIVE // SECURE</span>
-            </div>
-          </div>
+
         </div>
 
         {/* Right content */}
