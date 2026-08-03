@@ -6,24 +6,24 @@
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
 ### 📡 Multi-Source Signal Ingestion Pipeline
 - **Reddit API Integration**: Real-time monitoring of corporate mentions, subreddit discussions, and user feedback.
 - **News RSS Ingestion**: Live Google News RSS parser scanning public news outlets for brand telemetry.
 - **Deduplication Engine**: Hashes incoming text content (`text_hash`) and deduplicates signals against [Supabase](https://supabase.com/) storage to ensure clean metric calculations.
 
-### 🧠 Intelligent Incident Clustering & Classification
+###  Intelligent Incident Clustering & Classification
 - **Automated Categorization**: Heuristic signal classification into 5 operational categories:
-  - 🚨 **Outage**: System downtime, gateway failures (502/503/504), crashes, and service disruptions.
-  - 💳 **Payment**: Billing errors, Stripe checkout glitches, failed transactions, and subscription issues.
-  - 🐛 **Bug**: Product defects, software glitches, exceptions, and functional regressions.
-  - 🔒 **Fraud**: Security leaks, scam alerts, compromised accounts, and phishing threats.
-  - 📢 **PR**: Brand reputation changes, viral sentiment shifts, and media coverage.
+  -  **Outage**: System downtime, gateway failures (502/503/504), crashes, and service disruptions.
+  -  **Payment**: Billing errors, Stripe checkout glitches, failed transactions, and subscription issues.
+  -  **Bug**: Product defects, software glitches, exceptions, and functional regressions.
+  -  **Fraud**: Security leaks, scam alerts, compromised accounts, and phishing threats.
+  -  **PR**: Brand reputation changes, viral sentiment shifts, and media coverage.
 - **Sentiment & Severity Scoring**: Classifies signal sentiment (*critical*, *negative*, *neutral*, *positive*) and computes overall incident severity (*Critical*, *Warning*, *Watching*).
 - **Incident Metrics & Sparklines**: Computes baseline deviations, volume growth percentages (% increase), sparklines, impacted user estimates, root causes, and recommended triage steps.
 
-### 📊 Operations Dashboard & Management Tools
+###  Operations Dashboard & Management Tools
 - **Executive Dashboard (`/dashboard`)**: High-level telemetry metrics, active crisis clusters, live alert tickers, anomaly charts, and quick-triage controls.
 - **Incidents Hub (`/incidents`)**: Filterable crisis management overview with root-cause breakdowns, affected user estimates, and remediation workflows.
 - **Live Signal Stream (`/live-feed`)**: Streaming feed of raw incoming mentions with sentiment badges, channel sources, and direct links to original posts.
@@ -34,7 +34,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Framework**: [TanStack Start](https://tanstack.com/router/v1/docs/guide/start/introduction) (React 19 + TanStack Router + Vite)
 - **Backend & Database**: [Supabase](https://supabase.com/) (PostgreSQL with Row Level Security)
@@ -47,7 +47,7 @@
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 Sentinel-AI/
@@ -77,44 +77,8 @@ Sentinel-AI/
 
 ---
 
-## ⚡ Getting Started
 
-### Prerequisites
 
-- [Bun](https://bun.sh/) or Node.js (v18+) installed on your machine.
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/MaanasVerma25/Sentinel-AI.git
-   cd Sentinel-AI
-   ```
-
-2. Install dependencies:
-   ```bash
-   bun install
-   ```
-
-3. Set up environment variables by creating a `.env` file (refer to `.env.example`):
-   ```env
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. Start the local development server:
-   ```bash
-   npm run dev
-   ```
-
----
-
-## 📜 Available Scripts
-
-- `npm run dev`: Start the Vite development server.
-- `npm run build`: Build the production application.
-- `npm run lint`: Run ESLint checks across the project.
-- `npm run format`: Format project files using Prettier.
 
 ---
 
